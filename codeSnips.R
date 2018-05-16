@@ -96,4 +96,22 @@ LPSdat[sel, "genes"]
 sel <- LPSdat$genes %in% charGenes
 x <- LPSdat[sel, ]
 
+grep("Cd69|Cxcl10|Ifi47|Ifit2", LPSdat$genes)
+
+# ==== boxplot vs. violin ======================================================
+#
+library(ggplot2)
+# install.packages(reshape2)
+library(reshape2)
+
+boxplot(gvhdCD3p)
+
+X <- melt(gvhdCD3p)
+
+p <- ggplot(X, aes(x=variable,y=value))
+p + geom_violin()
+
+
+
+
 # [end]
