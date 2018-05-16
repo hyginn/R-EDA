@@ -21,7 +21,7 @@
 # First we open the file and have a look what it contains. Then we will properly
 # read it into an R object.
 
-rawDat <- read.csv("table_S3.csv",
+rawDat <- read.csv("./data/table_S3.csv",
 header = FALSE,
 stringsAsFactors = FALSE)
 
@@ -67,7 +67,7 @@ rm(rawDat)
 head(LPSdat)
 str(LPSdat)
 
-typeInfo(LPSdat)
+objectInfo(LPSdat)
 
 # Now, if everything is as it should be, let's save the object so we can
 # easily reload it later.

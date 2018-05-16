@@ -48,7 +48,7 @@
 
 
 #TOC> ==========================================================================
-#TOC> 
+#TOC>
 #TOC>   Section  Title                                                 Line
 #TOC> ---------------------------------------------------------------------
 #TOC>   1        Project files and setup                                 85
@@ -78,7 +78,7 @@
 #TOC>   5        Exploring flow cytometry data                          701
 #TOC>   5.1        Explore scatter plots                                715
 #TOC>   5.2        Trellis plots: all against all                       786
-#TOC> 
+#TOC>
 #TOC> ==========================================================================
 
 
@@ -229,6 +229,7 @@
 # 7 - Use objectInfo() to validate that the data frame you have created
 #     conforms to specifications. The first column is a character column,
 #     the other columns are numeric.
+# 8 - Call the final object "LPSdat"
 
 # ==   2.3  Digression: Factors in dataframes  =================================
 
@@ -241,7 +242,7 @@
 # To illustrate.
 genders <- factor(c("m", "f", "f", "m", "f"))
 genders
-typeInfo(genders)
+objectInfo(genders)
 is.ordered(genders)
 
 # We can define ordered factors by adding some details to
@@ -280,7 +281,7 @@ is.ordered(sampleGrades)
 #       fail.
 
 myDF <- data.frame(data = c("N/A", 1, 1, 2, 3, 5, 8))
-typeInfo(myDF)
+objectInfo(myDF)
 myDF <- myDF[-1, ]
 myDF
 
@@ -302,7 +303,7 @@ myDF3     # :-)
 # that support these tasks.
 
 
-# ===   3.1.1  A sample dataset                            
+# ===   3.1.1  A sample dataset
 
 # Let's start with a small datframe of synthetic data to go through the main
 # principles of subsetting. The same principles apply to matrices and vectors -
@@ -345,7 +346,7 @@ str(dat)
 ?"["
 
 
-# ===   3.1.2  Subsetting by index                         
+# ===   3.1.2  Subsetting by index
 
 # Elements can be uniquely identified by indices in the range of their length
 # (for vectors), or their rows and columns (in dataframes and matrices). The
@@ -381,7 +382,7 @@ dat[sample(1:N, 3), 1:3]
 
 sort(dat[ , 2])    # ... gives us the sorted values
 
-order(dat[ , 2])   # ... tells us in which row the sotrted values are
+order(dat[ , 2])   # ... tells us in which row the sorted values are
 dat[order(dat[ , 2]), 1:3]  # ordered by number of legs
 dat[order(dat[ , 1]), 1:3]  # ordered by lexical order of names
 
@@ -389,7 +390,7 @@ dat[order(dat[ , 1]), 1:3]  # ordered by lexical order of names
 # individually, then see how they fit into the brackets to subset the data.
 
 
-# ====  3.1.2.1  Negative indices                            
+# ====  3.1.2.1  Negative indices
 
 # If you specify a negative index, that element is excluded.
 
@@ -400,7 +401,7 @@ dat[-1:-3, 1:3]
 dat[-(1:3), 1:3]  # same effect
 
 
-# ===   3.1.3  Subsetting by logical                       
+# ===   3.1.3  Subsetting by logical
 
 
 # Instead of indices, we can specify sets of rows or columns by boolean values
@@ -453,7 +454,7 @@ apply(dat[ , 4:8], 1, function(x){all(x < 0.5)})
 
 dat[apply(dat[ , 4:8], 1, function(x){all(x < 0.5)}), ]
 
-# ====  3.1.3.1  Filtering by string matching expressions    
+# ====  3.1.3.1  Filtering by string matching expressions
 
 # The function grep(), and the %in% operator can be used to subset via string
 # matching:
@@ -471,7 +472,7 @@ dat[dat[ , 3] %in% scary, 1:3]
 
 
 
-# ===   3.1.4  Subsetting by name                          
+# ===   3.1.4  Subsetting by name
 
 # If rownames and/or columnnames have been defined, we can use these for
 # selection. If not defined, they default to the row/column numbers as character
@@ -504,7 +505,7 @@ dat[1:3, colnames(dat)[grep("^X", colnames(dat))]]
 # when you need a slice of the data for testing purposes, but even then it may
 # be preferrable to use the head() or tail() functions.
 
-# ===   3.1.5  The "$" operator                            
+# ===   3.1.5  The "$" operator
 
 # The "$" operator returns a single column as a vector. It is not strictly
 # necessary - the column can just as well be named in quotation marks within the
@@ -529,20 +530,17 @@ dat[1:3, legs]   # this returns an error - hopefully; but if for any
 # TASK: Write R expressions that get the following data from LPSdat:
 
 
-# rows 1:10 of the first two columns in reverse order
+#      - rows 1:10 of the first two columns in reverse order
 
+#      - gene names and the expression values for Mo.LPS
+#        for the top ten expression values.
+#        ( hint: use order() )
 
+#      - All genes for which B-cells are stimulated by LPS by
+#        more than 2 log units.
 
-# gene names and the expression values for Mo.LPS
-# for the top ten expression values.
-# hint: use order()
-
-
-# All genes for which B-cells are stimulated by LPS by
-# more than 2 log units.
-
-
-# Expression values for all genes whose gene-names appear in Figure 3B.
+#      - Expression values for all genes whose gene-names appear in Figure 3B.
+#        (hint: use the  %in%  operator)
 
 
 # With these simple subsetting and filtering operations, we are already
@@ -593,14 +591,12 @@ quantile(x)
 quantile(x, probs=c(0.1, 0.2, 0.9))
 abline(v=quantile(x, probs=c(0.9)), col="green", lwd=3)
 
-# ===   4.1.1  Boxplot                                     
-
+# ===   4.1.1  Boxplot
 
 set.seed(100)
 x <- rnorm(1000, mean=5, sd=2.5)
 boxplot(x)
 boxplot(x*x)
-
 
 # Careful - a boxplot per se can obscure
 # important structure in your data. Consider
@@ -610,7 +606,7 @@ x <- c(x, rnorm(100, mean=2, sd=1))
 hist(x)
 boxplot(x)
 
-# ===   4.1.2  Violin plot                                 
+# ===   4.1.2  Violin plot
 #
 if (!require(ggplot2, quietly=TRUE)) {
     install.packages("ggplot2")
@@ -651,51 +647,38 @@ abline(v=7.5)
 
 # =============================================
 # Overlay a histogram with a line plot
-set.seed(100)
-x <- rnorm(100, mean=0, sd=1)
-hist(x)
-lines(seq(-3,3,0.1), 54 * dnorm(seq(-3,3,0.1)), col="red")
+myStim <- LPSdat$B.LPS - LPSdat$B.ctrl
+hist(myStim,
+     col="#0066AA44",
+     main = "B.LPS - B.ctrl",
+     xlab = "stimulation (delta(log(expression))",
+     freq = FALSE)
+xVals <- seq(min(myStim),max(myStim),0.1)
+lines(xVals, dnorm(xVals, sd = sd(myStim)), col="#CC000055")
 
 
 
 # ==   4.3  QQ plots  ==========================================================
 
-set.seed(100)
-x <- rnorm(100, mean=0, sd=1)
-qqnorm(x)
-qqline(x, col=2)
-
-# ==   4.4  Lines and legends  =================================================
-
-# Example: compare the normal distribution with
-# the t-distribution
-x <- seq(-4, 4, 0.1)
-f1 <- dnorm(x, mean=0, sd=1)
-f2 <- dt(x, df=2)
-plot(x, f1, xlab="x", ylab="density", lwd=5, type="l")
-lines(x, f2, lwd=5, col=2)
-legend(-4, .4, c("Normal", "t2"), col=1:2, lwd=5)
-
-# =============================================
-# use qqplot to compare normally distributed samples with
-# t-distributed samples
-
-set.seed(100)
-t <- rt(100, df=2)
-qqnorm(t)
-qqline(t, col="#CC0000")
-
+qqnorm(myStim, pch = 21, bg ="#0066AA22")
+qqline(myStim, col="#CC000066")
+# add a legend
+legend("topleft",
+       cex = 0.8,
+       c("LPS effect", "normal distribution"),
+       col = c("#0066AA22", "#CC000066"),
+       lwd=5)
 
 # =============================================
 # QQ- plot: sample against sample
-set.seed(100)
-x <- rnorm(100, mean=0, sd=1)
-t <- rt(100, df=2)
-qqplot(x, t)
 
-# Task:
-# 1 - What columns of LPSdat could be compared with
-#     a qqplot? Explore this. Interpret the result.
+myStim <- LPSdat$B.LPS   - LPSdat$B.ctrl
+myBase <- LPSdat$Mo.ctrl - LPSdat$B.ctrl
+
+qqplot(myStim, myBase, pch =  21, bg = "#00AA6622")
+
+# TASK: What other columns of LPSdat could be compared with
+#       a qqplot? Explore this. Interpret the result.
 
 
 # =    5  Exploring flow cytometry data  =======================================
@@ -775,11 +758,12 @@ plotNorm2(nfit, selection=TRUE, ellipse=TRUE)
 #     LPS activation between a pair of cell types in LPSdat.
 # 2 - Add a line that shows the situation if all
 #     activations were equal.
-# 3 - Redo the plot with density coloring
 
 plot(LPSdat[ ,"Mo.ctrl"] - LPSdat[ ,"Mo.LPS"],
      LPSdat[ ,"MF.ctrl"] - LPSdat[ ,"MF.LPS"])
 abline(0,1,col = "red")
+
+# 3 - Redo the plot with density coloring
 
 
 

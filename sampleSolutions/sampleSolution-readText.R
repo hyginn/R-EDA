@@ -98,20 +98,21 @@ Ifit1
 Isg15
 Irf7"
 
-charGenes <- unlist(strsplit(s, "\n"))
+charGenes <- unlist(strsplit(s, "\n"))        #... or
+charGenes <-        strsplit(s, "\n")[[1]]
 
 
 
 # =    3  Solution 3: Use the readLines() function  ============================
 
-charGenes <- readLines("Fig_3-CharacteristicGenes.txt")
+charGenes <- readLines("./data/Fig_3-CharacteristicGenes.txt")
 
 # Note: this produces a vector of strings
 
 
 
 # =    4  Solution 4: Use the read.csv() function  =============================
-charGenes <- read.csv("Fig_3-CharacteristicGenes.txt",
+charGenes <- read.csv("./data/Fig_3-CharacteristicGenes.txt",
                       header = FALSE,
                       stringsAsFactors = FALSE)
 
@@ -119,6 +120,8 @@ charGenes <- read.csv("Fig_3-CharacteristicGenes.txt",
 # with data from an Excel spreadsheet! Simply save the data as csv to then
 # import it into R.
 
-
+charGenes$V1
+charGenes[ , "V1"]
+unlist(charGenes)
 
 # [END]

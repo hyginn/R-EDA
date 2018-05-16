@@ -6,5 +6,83 @@
 # ==============================================================================
 
 
+https://github.com/hyginn/R-EDA
+
+list.files()     # Confirm that the right files are present.
+list.files(recursive = TRUE)
+list.files(all.files = TRUE)
+
+# ==== reading data things =====================================================
+#
+
+Cd19
+Cd79b
+Cd22
+Cd37
+Ctsd
+
+myV <- c( "Cd19",
+          "Cd79b",
+          "Cd22",
+          "Cd37",
+          "Ctsd")
+
+(x <- "A:B:C")
+       strsplit(x, ":")
+       strsplit(x, ":")[[1]]
+unlist(strsplit(x, ":"))
+
+(x <- c("A:B:C", "D:E"))
+       strsplit(x, ":")
+       strsplit(x, ":")[[1]]
+unlist(strsplit(x, ":"))
+
+
+-(1:6)
+-1:6
+
+# to load an .RData file ...
+load("./data/LPSdat.RData")
+
+sort(c(8, 13, 5))
+order(c(8, 13, 5))
+
+# ===== column labels ====================================================
+
+a <- c("B", "NK", "Mo", "pDC")
+b <- c("ctrl", "LPS")
+
+rep(a, 2)
+rep(a, each = 2)
+
+paste(rep(a, each = 2), b)
+
+c("genes", paste(rep(a, each=2), b, sep = "."), "clusters")
+
+
+# ===== subsetting reloaded ====================================================
+# TASK: Write R expressions that get the following data from LPSdat:
+
+
+#      - rows 1:10 of the first two columns in reverse order
+
+LPSdat[ ??? , ??? ]
+
+#      - gene names and the expression values for Mo.LPS
+#        for the top ten expression values.
+#        ( hint: use order() )
+
+#           Break this down into steps!
+#           Which columns?
+#           How do we know where the highest values are?
+
+
+#      - All genes for which B-cells are stimulated by LPS by
+#        more than 2 log units.
+
+#      - Expression values for all genes whose gene-names appear in Figure 3B.
+#        (hint: use the  %in%  operator)
+
+
 
 # [end]
