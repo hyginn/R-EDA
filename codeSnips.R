@@ -111,6 +111,25 @@ X <- melt(gvhdCD3p)
 p <- ggplot(X, aes(x=variable,y=value))
 p + geom_violin()
 
+# ===== set.seed() =============================================================
+
+set.seed(3141)
+sample(1:5)
+
+
+# In our LPS data, MF and Mo aught to respond similarly to LPS challenge.
+# If so, the LPS - ctrl data should be highly correletd.
+#
+# TASK:
+#  -  is that the case?
+#  -  plot the scatterplot for this hypothesis,
+#  -  calculate a linear fit
+#  -  assess whether there is a linear correlation.
+#
+
+
+
+
 
 
 

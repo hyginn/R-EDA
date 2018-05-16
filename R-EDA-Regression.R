@@ -17,7 +17,9 @@
 #              Raphael Gottardo, FHCRC
 #              Sohrab Shah, UBC
 #
-# TODO:
+# TODO: Tighten up and simplify nls part, factor out main functions and
+#       helper functions.
+#       Include the scripts that were used to prepare the data.
 #
 #
 # == HOW TO WORK WITH THIS FILE ================================================
@@ -54,7 +56,7 @@
 
 
 #TOC> ==========================================================================
-#TOC> 
+#TOC>
 #TOC>   Section  Title                                                  Line
 #TOC> ----------------------------------------------------------------------
 #TOC>   1        Correlation                                              77
@@ -70,7 +72,7 @@
 #TOC>   4.6        Ordering by expression peak                          1107
 #TOC>   4.7        Plotting cell-cycle progression                      1199
 #TOC>   5        Alternatives to Pearson correlation - the MIC          1286
-#TOC> 
+#TOC>
 #TOC> ==========================================================================
 
 
@@ -96,7 +98,7 @@ cor(x, y)
 # This is uncorrelated data, our variables x and y are drawn from a normal
 # ("Gaussian) distribution. cor(x, y) has a small value.
 
-y <- x
+y <- -x
 plot(x, y)
 cor(x, y)
 # This is perfectly correlated data, x is drawn from a normal ("Gaussian)
@@ -213,8 +215,8 @@ cor(fit, res)
 # They characterize how well we can trust our model
 # parameters.
 
-pp <- predict(lm(HW$weights ~ HW$heights), interval = "confidence")
-pc <- predict(lm(HW$weights ~ HW$heights), interval = "prediction")
+pc <- predict(lm(HW$weights ~ HW$heights), interval = "confidence")
+pp <- predict(lm(HW$weights ~ HW$heights), interval = "prediction")
 head(pc)
 
 # Now plot pp and pc limits
@@ -242,6 +244,21 @@ matlines(HW2$heights, pp, lty=c(1,3,3), col="firebrick")
 # Incidentally, the value of 95% (or p == 0.95) - which is commonly used as the
 # minimal criterion for "significance" in biomedical research - is a parameter
 # of predict(), you could set it e.g. to 0.99 by specifying "level = 0.99".
+
+# Practice
+
+# In our LPS data, MF and Mo aught to respond similarly to LPS challenge.
+# If so, the LPS - ctrl data should be hoghly correletd.
+#
+# TASK:
+#  -  is that the case?
+#  -  plot the scatterplot for this hypothesis,
+#  -  calculate a linear fit
+#  -  assess whether there is a linear correlation.
+#
+
+
+
 
 
 # =    3  Applying regression to EDA  ==========================================
