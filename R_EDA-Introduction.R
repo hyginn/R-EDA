@@ -2,11 +2,12 @@
 #
 # Purpose:
 #
-# Version: 1.1
+# Version: 2.0
 #
-# Date:    2017  06  01
+# Date:    2018  05
 # Author:  Boris Steipe (boris.steipe@utoronto.ca)
 #
+# V 2.0    Restructured for 2018 workshop
 # V 1.1    2017 updates
 # V 1.0    First code 2016
 #
@@ -22,29 +23,31 @@
 #  execute a block of code, or less than one line, e.g. to execute
 #  only the core of a nested expression.
 #
-#  Edit code, as required, experiment with options, or just play.
-#  Especially play.
-#
-#  DO NOT simply source() this whole file!
+#  DO NOT save edits to this file! Otherwise this will create a conflict
+#  when we update it. If you do edit it, save it under a new file name like
+#  myR-EDA-Introduction.R  Your "local" files will not be overwritten by
+#  updates.
 #
 #  If there are portions you don't understand, use R's help system,
 #  Google for an answer, or ask me. Don't continue if you don't
 #  understand what's going on. That's not how it works ...
 #
 #  Once you have typed and executed the function init(), you will find a file
-#  called myScript.R in the project directory.
+#  called myEDANotes.R in the project directory.
 #
 #  Open it, you can place all of your code-experiments and notes into that
-#  file. This will be your "Lab Journal" for this session.
+#  file. This will be your "Lab Journal" for this session. Copy code to
+#  myEDANotes.R to experiment with options, or just play.
+#  Especially play.
 #
 # ==============================================================================
 #
 # Module 1: EDA (Exploratory Data Analysis)
 #
 # ==============================================================================
- 
+
 #TOC> ==========================================================================
-#TOC> 
+#TOC>
 #TOC>   Section  Title                                      Line
 #TOC> ----------------------------------------------------------
 #TOC>   1        Project files and setup                      77
@@ -60,29 +63,17 @@
 #TOC>   5        Exploring flow cytometry data               334
 #TOC>   5.1      Explore scatter plots                       350
 #TOC>   5.2      Trellis plots: all against all              424
-#TOC> 
+#TOC>
 #TOC> ==========================================================================
- 
-
-#TOC>
-#TOC>
-
-
-#TOC>
-#TOC>
-
 
 
 # ==============================================================================
 # =    1  Project files and setup  =============================================
 # ==============================================================================
 #
-# 1 - What's in the box - overview of files in this project:
-#     .gitignore
-#     .init.R
-#     .Rprofile
-#     R_refcards
-#     Plotting reference
+# 1 - What's in the box - overview of files specific to this module:
+
+#     ./scripts/Plotting reference
 #     Utilities:
 #        readS3.R
 #        typeInfo.R
@@ -102,36 +93,29 @@ list.files()     # Confirm that the right files are present.
 list.files(all.files = TRUE)
 
 
-# ==============================================================================
 # =    2  Load Data  ===========================================================
-# ==============================================================================
 
-# In yesterday's workshop we have worked with a supplementary datafile from a
-# 2014 publication on single-cell RNAseq for the automatic definition of tissue
-# types. The data consists of gene-names, expression enrichment values of
-# clustered cells in the presence and absence of LPS stimulation, and cluster
-# assignment labels. The corresponding paper is in a protected zip file in the
-# project folder.
+# Before we can do any kind of exploratory analysis, we first need to load data. There are many sources - the Web, text files, Excel spread sheets. Here, we'll explore data from the supplementary material published with a recent paper on single-cell RNAseq analysis.
 
-# We have experimented with loading the data and identified a number of issues.
-# The commands to load the data are in the script readS3.R. Study this script
-# and load the data.
-
-# TASK:
-#     study the script "readS3.R"
-#     load the object "LPSdat".
+# TASK: Unzip and browse the Jaitin et al. paper.
 
 
+# Often the data we need can be copied and pasted from simple
+# text files.
 
-# ==== CHECKPOINT =========================
-# Place a green PostIt on the lid of your
-# laptop when done, place a pink PostIt
-# if this didn't work or if you have
-# questions.
-# =========================================
-#
-# (Whenever you find a "Checkpoint" in this script, the
-#  green/pink PostIt instructions are implied.)
+# ===   1.4.1  Task: Getting data into R
+
+# TASK: open the text file for "./data/Fig_3-CharacteristicGenes.txt".
+#       I have prepared this file from the text in a figure of
+#       the actual paper.
+#       How do we get this data into a vector in R?
+
+#       First think of a way to do this by hand.
+#       Then, figure out if there is an R function that does this:
+#         - Open a textfile given its filename
+#         - Return a vector of strings
+
+#       (See "./sampleSolutions/sampleSolution-readText.R" if needed.)
 
 
 # Optional tasks:
@@ -147,6 +131,18 @@ list.files(all.files = TRUE)
 #
 # - Learn about regular expressions at
 #    http://steipe.biochemistry.utoronto.ca/abc/index.php/Regular_Expressions
+
+
+
+
+
+
+
+# TASK:
+#     study the script "readS3.R"
+#     load the object "LPSdat".
+
+
 
 
 
@@ -223,7 +219,7 @@ abline(v=quantile(x, probs=c(0.9)), col="green", lwd=3)
 
 # ==============================================================================
 
-# ===  4.1.1  Boxplot                                  === 
+# ===  4.1.1  Boxplot                                  ===
 
 
 set.seed(100)
@@ -240,7 +236,7 @@ x <- c(x, rnorm(100, mean=2, sd=1))
 hist(x)
 boxplot(x)
 
-# ===  4.1.2  Violin plot                              === 
+# ===  4.1.2  Violin plot                              ===
 #
 if (!require(ggplot2, quietly=TRUE)) {
     install.packages("ggplot2")

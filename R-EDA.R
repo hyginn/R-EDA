@@ -59,7 +59,7 @@
 # exactly what will happen to you in real life. So the focus of the workshop is
 # not (only) to provide answers, because those will be (partially) irrelevant
 # for the tasks you work on at home. Rather we will focus on problem solving
-# startegies, finding answers, and implementing them, step by step. Community
+# strategies, finding answers, and implementing them, step by step. Community
 # intelligence will be key to find solutions, and - as experience shows - the
 # solutions we come up with as a team are going to be much smarter than what I
 # could come up with by myself. But note: what you take home from here is not
@@ -75,7 +75,7 @@
 #   - hypothesis testing
 
 
-# The tasks are contained in R scripts that we may updated during the
+# The tasks are contained in R scripts that we may update during the
 # course or workshop. Since all of the material is in an R project that is
 # laoded from GitHub, updating files is easy - just select "Pull branches" from
 # the version control menu. However, we would also like you to write your own
@@ -83,9 +83,9 @@
 # lost if they are in the same file that is being updated. So we create a
 # "local" file - myEDAnotes.R That you can edit for all of your experiments.
 
-# Once again: edit, annotate, extend and work with only the myEDAnotes.R. Notes that you put into the main script files will prevent you from updtaing them
-# easily from GitHub.
-# files (but don't commit them).
+# Once again: edit, annotate, extend only the myEDAnotes.R. Notes that you put
+# into the main script files will prevent you from updtaing them easily from
+# GitHub.
 
 
 # =    2  GETTING STARTED  =====================================================
@@ -94,8 +94,8 @@
 # ==   2.1  Keep a Journal ...  ================================================
 
 # To profit the most from this workshop, it is imperative that you take notes,
-# lots of notes. Code examples and task annotations go directly into the
-# my<file>.R files but concepts are much better paraphrased and hand-written in
+# lots of notes. Code examples and task annotations go directly into
+# myEDAnotes.R file but concepts are much better paraphrased and hand-written in
 # your journal: you'll find that this dramatically improves your focus and
 # understanding.
 
@@ -109,33 +109,26 @@
 #
 #  - the  assets  folder
 #  - the  data   folder
-#  - the  sampleSolutions  folder
 #  - the  R  folder
+#     - functionTemplate
+#     - R scripts that define functions
+#  - the scripts folder
+#     - plottingReference.R
+#     - scriptTemplate.R
+#     - unitTesting.R
 #  - the  tests  folder
+#  - the  sampleSolutions  folder
 #
-#  - functionTemplate.R
-#  - scriptTemplate.R
+#  - codeSnips.R
+#  - myEDANotes.R
 #
 
 
-# =    3  SIMPLE SEQUENCE ANALYSIS  ============================================
+# =    3  INTRODUCTION  ============================================
 
-# In the file pane of RStudio, click on "mySequenceAnalysis.R" to work with- and
-# edit it. (What? There is no file by that name? Either you never typed init(),
-# or you are not looking at the right directory. If you can't figure out what
-# the problem is, let us know.)
+# In the file pane of RStudio, click on "R-EDA-Introduction.R" to work with it.
+# But don't edit the file.
 
-
-# =    4  DATA INTEGRATION  ====================================================
-
-# Next, open "myDataIntegration.R" to enter your code as we work through the
-# scenario and tasks.
-
-
-# =    5  NUMERIC DATA  ========================================================
-
-# In this unit we will perform numeric calculations - with 3D protein
-# strucure data. Open "myNumericData.R" for your notes and code experiments.
 
 
 
