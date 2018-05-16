@@ -2,8 +2,11 @@
 .Rhistory
 .Rapp.history
 
+#OS files
+.DS_store
+
 # Session Data files
-.RData
+# .RData
 
 # Example code in package build process
 *-Ex.R
