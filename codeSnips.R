@@ -66,11 +66,16 @@ c("genes", paste(rep(a, each=2), b, sep = "."), "clusters")
 
 #      - rows 1:10 of the first two columns in reverse order
 
-LPSdat[ ??? , ??? ]
+LPSdat[ 10:1 , 1:2 ]
 
 #      - gene names and the expression values for Mo.LPS
 #        for the top ten expression values.
 #        ( hint: use order() )
+x <- LPSdat$Mo.LPS[1:20]
+x[order(x, decreasing = TRUE)[1:5]]
+
+ord <- order(LPSdat$Mo.LPS, decreasing = TRUE)[1:10]
+LPSdat[ord, c("genes", "Mo.LPS")]
 
 #           Break this down into steps!
 #           Which columns?
@@ -80,9 +85,15 @@ LPSdat[ ??? , ??? ]
 #      - All genes for which B-cells are stimulated by LPS by
 #        more than 2 log units.
 
+hist(LPSdat$B.LPS - LPSdat$B.ctrl)
+
+sel <- (LPSdat$B.LPS - LPSdat$B.ctrl) > 2
+LPSdat[sel, "genes"]
+
 #      - Expression values for all genes whose gene-names appear in Figure 3B.
 #        (hint: use the  %in%  operator)
 
-
+sel <- LPSdat$genes %in% charGenes
+x <- LPSdat[sel, ]
 
 # [end]
