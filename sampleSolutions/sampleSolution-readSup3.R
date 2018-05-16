@@ -6,7 +6,6 @@
 # ==============================================================================
 
 # TASK - read Table_S3.csv
-# ================================================
 
 # I have included a dataset with this project, a .csv file taken from
 # suplementary data of a paper on tissue definition by single cell RNA seq, by
@@ -14,9 +13,10 @@
 
 # http://www.ncbi.nlm.nih.gov/pubmed/24531970
 
-# This data set contains log2 fold changes of gene expression enrichment in different cd11c+ cell
-# populations, and their response to lipopolysaccharide stimulation. It was posted as an Excel
-# file on the Science Website.  I have simply opened that file, and saved it as .csv, unchanged.
+# This data set contains log2 fold changes of gene expression enrichment in
+# different cd11c+ cell populations, and their response to lipopolysaccharide
+# stimulation. It was posted as an Excel file on the Science Website.  I have
+# simply opened that file, and saved it as .csv, unchanged.
 
 # First we open the file and have a look what it contains. Then we will properly
 # read it into an R object.
@@ -38,21 +38,21 @@ stringsAsFactors = FALSE)
 
 LPSdat <- rawDat[-(1:6), ]  # drop first six rows
 colnames(LPSdat) <- c("genes",      # gene names
-"B.ctrl",     # Cell types are taken from
-"B.LPS",      # Figure 4 of Jaitin et al.
-"MF.ctrl",    # .ctrl and .LPS refer to control
-"MF.LPS",     #   and LPS challenge
-"NK.ctrl",    # The cell types are:
-"NK.LPS",     #   B:    B-cell
-"Mo.ctrl",    #   MF:   Macrophage
-"Mo.LPS",     #   NK:   Natural killer cell
-"pDC.ctrl",   #   Mo:   Monocyte
-"pDC.LPS",    #   pDC:  plasmacytoid dendritic cell
-"DC1.ctrl",   #   DC1:  dendritic cell subtype 1
-"DC1.LPS",    #   DC2:  dendritic cell subtype 2
-"DC2.ctrl",   #
-"DC2.LPS",    #
-"cluster")    # Gene assigned to cluster by authors
+                      "B.ctrl",     # Cell types are taken from
+                      "B.LPS",      # Figure 4 of Jaitin et al.
+                      "MF.ctrl",    # .ctrl and .LPS refer to control
+                      "MF.LPS",     #   and LPS challenge
+                      "NK.ctrl",    # The cell types are:
+                      "NK.LPS",     #   B:    B-cell
+                      "Mo.ctrl",    #   MF:   Macrophage
+                      "Mo.LPS",     #   NK:   Natural killer cell
+                      "pDC.ctrl",   #   Mo:   Monocyte
+                      "pDC.LPS",    #   pDC:  plasmacytoid dendritic cell
+                      "DC1.ctrl",   #   DC1:  dendritic cell subtype 1
+                      "DC1.LPS",    #   DC2:  dendritic cell subtype 2
+                      "DC2.ctrl",   #
+                      "DC2.LPS",    #
+                      "cluster")    # Gene assigned to cluster by authors
 rownames(LPSdat) <- 1:nrow(LPSdat)
 
 str(LPSdat)
