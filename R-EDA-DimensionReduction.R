@@ -54,7 +54,7 @@
 
 
 #TOC> ==========================================================================
-#TOC>
+#TOC> 
 #TOC>   Section  Title                                     Line
 #TOC> ---------------------------------------------------------
 #TOC>   1        PCA introduction                            77
@@ -63,14 +63,14 @@
 #TOC>   1.3        Scaling                                  190
 #TOC>   2        EDA with PCA                               207
 #TOC>   2.1        The relative importance of PCs           209
-#TOC>   3        EDA with PCA                               244
-#TOC>   3.1        Load LPSdata                             248
-#TOC>   3.2        Explore the principal components         268
-#TOC>   3.3        Explore some similar genes               298
-#TOC>   4        t-SNE                                      325
-#TOC>   4.1        tsne of crabs data                       348
-#TOC>   4.2        tsne of LPS data                         370
-#TOC>
+#TOC>   3        EDA with PCA                               250
+#TOC>   3.1        Load LPSdata                             254
+#TOC>   3.2        Explore the principal components         274
+#TOC>   3.3        Explore some similar genes               304
+#TOC>   4        t-SNE                                      330
+#TOC>   4.1        tsne of crabs data                       358
+#TOC>   4.2        tsne of LPS data                         380
+#TOC> 
 #TOC> ==========================================================================
 
 
