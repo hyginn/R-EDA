@@ -140,5 +140,26 @@ plot(crabs[, 5], crabs[, 6], xlim = c(0,50), ylim = c(0,50), pch=as.numeric(fac)
 plot(scale(crabs[, 5]), scale(crabs[, 6]), pch=as.numeric(fac))
 
 
+# using vectors and named vectors to translate values into
+# different types of values
+
+myValues <- c("red", "white")
+names(myValues) <- c("R", "W")
+myValues
+
+
+# tranlating index vectors to "map" values:
+in1 <- c(1, 2, 1, 1, 2, 1)
+myValues[in1]
+
+# translating named vectors by using names
+in2 <- c("W", "W", "R", "R", "W", "R")
+myValues[in2]
+
+# very(!) useful in many situations - e.g. map values to color, shape, or
+# size in a plot; map accession IDs to gene name; ...
+
+
+
 
 # [end]
