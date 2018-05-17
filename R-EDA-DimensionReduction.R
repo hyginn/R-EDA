@@ -55,22 +55,21 @@
 
 #TOC> ==========================================================================
 #TOC> 
-#TOC>   Section  Title                                                    Line
-#TOC> ------------------------------------------------------------------------
-#TOC>   1        PCA introduction                                           78
-#TOC>   1.1        minimal PCA example                                     109
-#TOC>   1.2        prcomp() and princomp()                                 174
-#TOC>   1.3        Scaling                                                 191
-#TOC>   2        EDA with PCA                                              208
-#TOC>   2.1        The relative importance of PCs                          210
-#TOC>   2.1.1          Task: identify categories of elements in a plot     271
-#TOC>   3        EDA with PCA                                              298
-#TOC>   3.1        Load LPSdata                                            302
-#TOC>   3.2        Explore the principal components                        322
-#TOC>   3.3        Explore some similar genes                              352
-#TOC>   4        t-SNE                                                     379
-#TOC>   4.1        tsne of crabs data                                      402
-#TOC>   4.2        tsne of LPS data                                        424
+#TOC>   Section  Title                                     Line
+#TOC> ---------------------------------------------------------
+#TOC>   1        PCA introduction                            77
+#TOC>   1.1        minimal PCA example                      108
+#TOC>   1.2        prcomp() and princomp()                  173
+#TOC>   1.3        Scaling                                  190
+#TOC>   2        EDA with PCA                               207
+#TOC>   2.1        The relative importance of PCs           209
+#TOC>   3        EDA with PCA                               244
+#TOC>   3.1        Load LPSdata                             248
+#TOC>   3.2        Explore the principal components         268
+#TOC>   3.3        Explore some similar genes               298
+#TOC>   4        t-SNE                                      325
+#TOC>   4.1        tsne of crabs data                       348
+#TOC>   4.2        tsne of LPS data                         370
 #TOC> 
 #TOC> ==========================================================================
 
@@ -236,63 +235,10 @@ plot(crabs[, 4:8], pch=as.numeric(fac))
 plot(crabs[, 4:5], pch=as.numeric(fac))
 plot(crabs[, 5:6], pch=as.numeric(fac))
 
-# Apply principal components analysis to the five measured dimensions
-head(crabs)
-pcaCrabs <- prcomp(crabs[, 4:8])
 
-plot(pcaCrabs)
-summary(pcaCrabs)
-str(pcaCrabs)
+# TASK: Apply PCA to the crabs dataset to distinguish species and sex
+#       from morphometric measurements.
 
-# Plot projections along the components into a scatterplot.
-# Axes for points are scaled as values, for vectors as variance
-# Default for biplot() is the first and second component.
-
-biplot(pcaCrabs, xlabs=as.numeric(fac))
-legend(81, -63,
-       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
-       box.col=1, bg="lightgrey")
-
-# Plot the first against the third principal component
-biplot(pcaCrabs, xlabs=as.numeric(fac), choices = c(1, 3))
-legend(84, -63,
-       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
-       box.col=1,
-       bg="lightgrey")
-
-# Plot the second against the third principal component
-biplot(pcaCrabs, xlabs=as.numeric(fac), choices = c(2, 3))
-legend(-14.8, 16.2,
-       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
-       box.col=1,
-       bg="lightgrey")
-
-
-# ===   2.1.1  Task: identify categories of elements in a plot
-
-# TASK: plot the last plot (without vectors) with plotting
-# symbols that correspond to the gender and type of crab:
-# orange and blue circles for females and triangles for males.
-
-# Advanced: also make the symbol-size depend on carapace length or
-# the mean of all five measurements.
-
-# A pedestrian (but simple) solution
-plot(pcaCrabs$x[,2], pcaCrabs$x[,2], type ="n")
-points(pcaCrabs$x[  1: 50, 2], pcaCrabs$x[  1: 50, 3], pch=17, col="blue")
-points(pcaCrabs$x[ 51:100, 2], pcaCrabs$x[ 51:100, 3], pch=19, col="blue")
-points(pcaCrabs$x[101:150, 2], pcaCrabs$x[101:150, 3], pch=17, col="orange")
-points(pcaCrabs$x[151:200, 2], pcaCrabs$x[151:200, 3], pch=19, col="orange")
-
-
-# TASK: Study the code in crabsPlot.R for a more advanced solution
-
-source("crabsPlot.R")
-crabsPlot(pcaCrabs$x[,2], pcaCrabs$x[,3],
-          crabs[ ,1], crabs[ ,2], pcaCrabs$x[ ,1],
-          main = "Principal components 2 and 3 distinguish crabs",
-          xlab = "PC2",
-          ylab = "PC3")
 
 
 # =    3  EDA with PCA  ========================================================
