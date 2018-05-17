@@ -51,22 +51,27 @@
 #TOC> 
 #TOC>   Section  Title                                           Line
 #TOC> ---------------------------------------------------------------
-#TOC>   1        LOAD DATA FROM GEO                                72
-#TOC>   1.1        Exploring the data                             185
-#TOC>   1.2        Explorig distance metrics                      344
-#TOC>   1.3        Clusters From Dendrograms                      384
-#TOC>   2        PARTITIONING CLUSTERING                          554
-#TOC>   2.1        K-means                                        557
-#TOC>   2.2        K-medoids                                      577
-#TOC>   3        AFFINITY PROPAGATION CLUSTERING                  592
-#TOC>   4        CLUSTER QUALITY METRICS                          631
-#TOC>   5        T-STOCHASTIC NEIGBOUR EMBEDDING                  685
-#TOC>   5.1        Digression: color scales                       742
-#TOC>   5.2        ColoUring tsne results                         781
-#TOC>   5.3        Selecting from tsne results                    804
-#TOC>   5.4        Interactive graphics with tsne results         864
-#TOC>   5.5        A Polygon selection                            936
-#TOC>   5.6        tsne 3D embedding                             1017
+#TOC>   1        LOAD DATA FROM GEO                                79
+#TOC>   1.1        Exploring the data                             192
+#TOC>   2        PREPARE DATA FOR ANALYSIS                        214
+#TOC>   3        HEATMAPS                                         281
+#TOC>   4        HIERARCHICAL CLUSTERING                          325
+#TOC>   4.1        Explorig distance metrics                      351
+#TOC>   4.2        Clusters From Dendrograms                      391
+#TOC>   4.2.1          Setting Cut-Levels Dynamically             490
+#TOC>   5        PARTITIONING CLUSTERING                          561
+#TOC>   5.1        K-means                                        564
+#TOC>   5.2        K-medoids                                      584
+#TOC>   6        AFFINITY PROPAGATION CLUSTERING                  599
+#TOC>   7        CLUSTER QUALITY METRICS                          638
+#TOC>   8        T-STOCHASTIC NEIGBOUR EMBEDDING                  692
+#TOC>   8.1        Digression: color scales                       749
+#TOC>   8.2        Colouring tsne results                         788
+#TOC>   8.3        Selecting from tsne results                    811
+#TOC>   8.4        Interactive graphics with tsne results         871
+#TOC>   8.5        A Polygon selection                            943
+#TOC>   8.6        tsne 3D embedding                             1024
+#TOC>   9        MORE PRACTICE                                   1062
 #TOC> 
 #TOC> ==========================================================================
 
@@ -206,7 +211,7 @@ exprs(gset)["7919642", 5]
 exprs(gset)[c("8117594","7900167", "8151871"),]
 
 
-# 2 PREPARE DATA FOR ANALYSIS
+# =    2  PREPARE DATA FOR ANALYSIS  ===========================================
 
 
 # For cluster analysis, it's useful to make a table from
@@ -273,7 +278,7 @@ dat <- readRDS("GSE26922.rds")
 identical(dat, dat2)  # has to be TRUE !
 
 
-# 1 HEATMAPS
+# =    3  HEATMAPS  ============================================================
 
 # Heatmaps are a staple of gene expression analysis.
 # You can tweak many of the parameters, but for a first look
@@ -317,7 +322,7 @@ for (i in 1:length(set2)) {
 # have similar expression profiles profiles within sets and different
 # profiles between sets.
 
-# = HIERARCHICAL CLUSTERING
+# =    4  HIERARCHICAL CLUSTERING  =============================================
 
 
 # Hierarchical clustering is probably the most basic technique.
@@ -343,7 +348,7 @@ plot(hc)
 # works for all data. You'll need to explore: what you are looking for
 # is a distance metric that gives the clearest block structure.
 
-# ==   1.2  Explorig distance metrics  =========================================
+# ==   4.1  Explorig distance metrics  =========================================
 
 dEu <- function(x) dist(x, method="euclidian")
 heatmap(dat, distfun = dEu)
@@ -383,7 +388,7 @@ heatmap(dat, distfun = dMIC)
 hc <- hclust(dMax(dat))
 
 
-# ==   1.3  Clusters From Dendrograms  =========================================
+# ==   4.2  Clusters From Dendrograms  =========================================
 
 # Back to our original dendrogram ...
 plot(hc)
@@ -482,7 +487,7 @@ for (i in 1:9) {
 par(oPar)
 
 
-# 1.1.1 Setting Cut-Levels Dynamically
+# ===   4.2.1  Setting Cut-Levels Dynamically        
 
 # While this may be aesthetically somewhat satisfactory, it is clear that
 # the clusters are not homogenous as we might need them for biological
@@ -553,10 +558,10 @@ par(oPar)
 # that several of them are not really different.
 
 
-# =    2  PARTITIONING CLUSTERING  =============================================
+# =    5  PARTITIONING CLUSTERING  =============================================
 
 
-# ==   2.1  K-means  ===========================================================
+# ==   5.1  K-means  ===========================================================
 
 # K-means clusters by assigning elements to a fixed
 # number of cluster centres, so that similarity
@@ -576,7 +581,7 @@ points(cl$centers, col = niceCols[1:k], pch = 8, cex=2)
 # ... K-means does not guarantee a globally optimal solution,
 # merely a locally converged one.
 
-# ==   2.2  K-medoids  =========================================================
+# ==   5.2  K-medoids  =========================================================
 
 # load library "cluster" for K-medoid partitioning
 if (!require(cluster, quietly=TRUE)) {
@@ -591,7 +596,7 @@ plot(dat[,"t2"],dat[,"t6"], col=niceCols[cl$cluster])
 plot(cl) # shows boundary and silhouette plots
 
 
-# =    3  AFFINITY PROPAGATION CLUSTERING  =====================================
+# =    6  AFFINITY PROPAGATION CLUSTERING  =====================================
 
 
 # Based on B. J. Frey and D. Dueck. Clustering by
@@ -630,7 +635,7 @@ matplot(t(datNorm[unlist(apRes[ 9]),]),
 par(oPar)
 
 
-# =    4  CLUSTER QUALITY METRICS  =============================================
+# =    7  CLUSTER QUALITY METRICS  =============================================
 
 
 # So .. which method should we use?
@@ -684,7 +689,7 @@ vignette("clValid")
 # 2 - How can you actually apply it to the data?
 
 
-# =    5  T-STOCHASTIC NEIGBOUR EMBEDDING  =====================================
+# =    8  T-STOCHASTIC NEIGBOUR EMBEDDING  =====================================
 
 # tsne - pioneered by Geoff Hinton - is an embedding
 # procedure that guarantees that points in a high-
@@ -741,7 +746,7 @@ tsneRef <- as.matrix(read.csv(file="tsneRef.dat",
 
 
 
-# ==   5.1  Digression: color scales  ==========================================
+# ==   8.1  Digression: color scales  ==========================================
 
 
 # Our AP clustering had identified 16 clusters. The color brewer palette
@@ -780,7 +785,7 @@ eqSpect <- colorRampPalette(
 pie(rep(1,n), col=eqSpect(n), main="eqSpect()")
 
 
-# ==   5.2  ColoUring tsne results  ============================================
+# ==   8.2  Colouring tsne results  ============================================
 
 
 # Let's use our eqSpect() colors to plot our tsn-embedded points,
@@ -803,7 +808,7 @@ for (i in 1:n) {
 # and should probably be joined.
 
 
-# ==   5.3  Selecting from tsne results  =======================================
+# ==   8.3  Selecting from tsne results  =======================================
 
 
 # Time for something a little bit more advanced. Looking
@@ -863,7 +868,7 @@ for (i in 1:length(set3)) {
 # structure within a set of similarly expressed genes is separated into
 # clusters by AP, and how tsne gives us a good indication of that structure.
 
-# ==   5.4  Interactive graphics with tsne results  ============================
+# ==   8.4  Interactive graphics with tsne results  ============================
 
 # But typing all those numbers by hand is tedious! Wouldn't it be nice if we
 # could select them interactively?
@@ -935,7 +940,7 @@ myPicked <- pickGenes(tsneRef)
 rownames(dat[myPicked,])
 
 
-# ==   5.5  A Polygon selection  ===============================================
+# ==   8.5  A Polygon selection  ===============================================
 
 
 # We can use a conceptually very similar procedure to
@@ -1016,7 +1021,7 @@ dev.set(w1)
 (picks <- sel(tsneRef))
 
 
-# ==   5.6  tsne 3D embedding  =================================================
+# ==   8.6  tsne 3D embedding  =================================================
 
 
 # tsne can embed in 2- 3- or higher dimensions. There are
@@ -1053,6 +1058,14 @@ tsne3D <- tsne(datNorm,
                perplexity=10)
 
 
+
+# =    9  MORE PRACTICE  =======================================================
+
+# TASK: Based on a clustering of the PCA results (without dimension 1), cluster
+#       the crabs data into four clusters of orange/blue males/females.
+#       Then confirm the percentage of each category that was correctly
+#       clustered by comparing the cluster IDs to the labels in the crabs
+#       data set.
 
 # ==================================================
 # outlook: classification
