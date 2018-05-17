@@ -157,38 +157,40 @@ crabsS[, 4:8] <- scale(crabs[,4:8])
 head(crabs)
 head(crabsS)
 
-boxplot(crabs[,4:8])
-boxplot(crabsS[,4:8])
+boxplot(crabs[,4:8])     # original
+boxplot(crabsS[,4:8])    # scaled
 
 # run pca
-
 pcaS <- prcomp(crabsS[,4:8])
-pcaS
-
-plot(pcaS)
+plot(pcaS)               # the size of the individual PCs
 
 plot(pcaS$x[,2], pcaS$x[,3],   # now "clusters" begin to become apparent
      main = "PCA of scaled data")
 
-# compare to unscaled values
+# another common way to plot pca-results
+biplot(pcaS)
+biplot(pcaS, choices = 2:3)
 
+# compare to unscaled values
 pcaO <- prcomp(crabs[,4:8])
 plot(pcaO$x[,2], pcaO$x[,3],
-     main = "PCA of original data")   # now "clusters" begin to become apparent
+     main = "PCA of original data")
+
+biplot(pcaO)
+biplot(pcaO, choices = 2:3)
 
 
 
+# colour- and shape-code the categories
 
-# plot the values
-
-plot(  pcaS$x[,2],         pcaS$x[,2], type ="n")
+plot(  pcaS$x[,2],         pcaS$x[,3], type ="n")
 points(pcaS$x[  1: 50, 2], pcaS$x[  1: 50, 3], pch=17, col="blue")
 points(pcaS$x[ 51:100, 2], pcaS$x[ 51:100, 3], pch=19, col="blue")
 points(pcaS$x[101:150, 2], pcaS$x[101:150, 3], pch=17, col="orange")
 points(pcaS$x[151:200, 2], pcaS$x[151:200, 3], pch=19, col="orange")
 
 
-plot(  pcaO$x[,2],         pcaO$x[,2], type ="n")
+plot(  pcaO$x[,2],         pcaO$x[,3], type ="n")
 points(pcaO$x[  1: 50, 2], pcaO$x[  1: 50, 3], pch=17, col="blue")
 points(pcaO$x[ 51:100, 2], pcaO$x[ 51:100, 3], pch=19, col="blue")
 points(pcaO$x[101:150, 2], pcaO$x[101:150, 3], pch=17, col="orange")
@@ -218,8 +220,31 @@ myValues[in2]
 # very(!) useful in many situations - e.g. map values to color, shape, or
 # size in a plot; map accession IDs to gene name; ...
 
+myValues <- c("orange", "blue")
+names(myValues) <- c("O", "B")
 
+myValues[crabs$sp]
+myValues[as.character(crabs$sp)]
 
+x <- character(nrow(crabs))
+x[which(crabs$sp == "B")] <- "blue"
 
+crabsPlot(pcaS$x[, 2],
+          pcaS$x[, 3],
+          crabs$sp,
+          crabs$sex,
+          rowMeans(crabs[ , 4:8]),
+          main  = "Scaled crab categories",
+          xlab = "PC 2",
+          ylab = "PC 3")
+
+crabsPlot(pcaO$x[, 2],
+          pcaO$x[, 3],
+          crabs$sp,
+          crabs$sex,
+          rowMeans(crabs[ , 4:8]),
+          main  = "Un-scaled crab categories",
+          xlab = "PC 2",
+          ylab = "PC 3")
 
 # [end]
