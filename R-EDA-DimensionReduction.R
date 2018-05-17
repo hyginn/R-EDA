@@ -54,7 +54,7 @@
 
 
 #TOC> ==========================================================================
-#TOC> 
+#TOC>
 #TOC>   Section  Title                                     Line
 #TOC> ---------------------------------------------------------
 #TOC>   1        PCA introduction                            77
@@ -70,7 +70,7 @@
 #TOC>   4        t-SNE                                      325
 #TOC>   4.1        tsne of crabs data                       348
 #TOC>   4.2        tsne of LPS data                         370
-#TOC> 
+#TOC>
 #TOC> ==========================================================================
 
 
@@ -237,7 +237,13 @@ plot(crabs[, 5:6], pch=as.numeric(fac))
 
 
 # TASK: Apply PCA to the crabs dataset to distinguish species and sex
-#       from morphometric measurements.
+#       from morphometric measurements. Plot the results of important
+#       PCs as a scatterplot in which blue males are shown as blue
+#       triangles, orange males as orange triangles, blue females as
+#       blue circles and orange famales as orange circles.
+#
+#       (Advanced: scale the plot symbols with the mean of all
+#                  individual measurements)
 
 
 
@@ -321,7 +327,6 @@ matplot(t(dat[Sel2, ]),
         xlab = "categories")
 
 
-
 # =    4  t-SNE  ===============================================================
 
 # t-Stochastic Neighbour Embedding is a powerful dimension re-
@@ -342,6 +347,11 @@ if (!require(tsne, quietly=TRUE)) {
   install.packages("tsne")
   library(tsne)
 }
+# Package information:
+#  library(help =   tsne)     # basic information
+#  browseVignettes("tsne")    # available vignettes
+#  data(package =  "tsne")    # available datasets
+
 ?tsne
 
 
