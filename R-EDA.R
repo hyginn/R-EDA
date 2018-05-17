@@ -131,6 +131,16 @@
 
 
 
+# =    4  REGRESSION  ============================================
+
+# In the file pane of RStudio, click on "R-EDA-Regression.R" to work with it.
+
+
+# =    5  DIMENSION REDUCTION  ============================================
+
+# The dimension reduction unit is in the "R-EDA-DimensionReduction.R" file.
+
+
 
 # =    6  FOOTNOTES  ===========================================================
 

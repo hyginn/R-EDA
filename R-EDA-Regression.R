@@ -1313,7 +1313,7 @@ axis(2, at = yTicks, labels = ygData$stdName[CCgenes$i[idx]],
 # command:
 #    save(LPSdat, file="LPSdat.RData")
 # You can conveniently recreate it:
-load(file="LPSdat.RData")
+load(file="./data/LPSdat.RData")
 
 # Note that you don't need to assign the contents of the file - the R objects
 # are recreated into exactly the same name and state they had when you saved
