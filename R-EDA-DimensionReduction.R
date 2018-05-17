@@ -63,13 +63,13 @@
 #TOC>   1.3        Scaling                                  190
 #TOC>   2        EDA with PCA                               207
 #TOC>   2.1        The relative importance of PCs           209
-#TOC>   3        EDA with PCA                               250
-#TOC>   3.1        Load LPSdata                             254
-#TOC>   3.2        Explore the principal components         274
-#TOC>   3.3        Explore some similar genes               304
-#TOC>   4        t-SNE                                      330
-#TOC>   4.1        tsne of crabs data                       358
-#TOC>   4.2        tsne of LPS data                         380
+#TOC>   3        EDA with PCA                               251
+#TOC>   3.1        Load LPSdata                             255
+#TOC>   3.2        Explore the principal components         275
+#TOC>   3.3        Explore some similar genes               305
+#TOC>   4        t-SNE                                      331
+#TOC>   4.1        tsne of crabs data                       359
+#TOC>   4.2        tsne of LPS data                         381
 #TOC> 
 #TOC> ==========================================================================
 
@@ -213,6 +213,7 @@ objectInfo(pcaSample)
 # crabs each of two colour forms and both sexes, of the species Leptograpsus
 # variegatus collected at Fremantle, W. Australia.
 
+# install.packages("MASS")
 library(MASS)
 data(crabs)
 
@@ -240,7 +241,7 @@ plot(crabs[, 5:6], pch=as.numeric(fac))
 #       from morphometric measurements. Plot the results of important
 #       PCs as a scatterplot in which blue males are shown as blue
 #       triangles, orange males as orange triangles, blue females as
-#       blue circles and orange famales as orange circles.
+#       blue circles and orange females as orange circles.
 #
 #       (Advanced: scale the plot symbols with the mean of all
 #                  individual measurements)

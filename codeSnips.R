@@ -127,9 +127,17 @@ sample(1:5)
 #  -  assess whether there is a linear correlation.
 #
 
+# ===== PCA things =============================================================
 
+oPar <- par(mfrow = c(2,1))
+plot(x1,y2, xlim=c(-4,4), ylim=c(-4,4))
+plot(pcaSample$x[,1],pcaSample$x[,2], xlim=c(-4,4), ylim=c(-4,4))
+par(oPar) # restore graphics state parameters
 
-
+# scale?
+plot(crabs[, 5], crabs[, 6], pch=as.numeric(fac))
+plot(crabs[, 5], crabs[, 6], xlim = c(0,50), ylim = c(0,50), pch=as.numeric(fac))
+plot(scale(crabs[, 5]), scale(crabs[, 6]), pch=as.numeric(fac))
 
 
 
