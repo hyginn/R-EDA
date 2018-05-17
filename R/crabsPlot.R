@@ -25,7 +25,8 @@ crabsPlot <- function(x, y, species, sex, age,
     #    integers, both factors can be either 1 or 2. We use this to
     #    pick a color value from a vector of four colours. The first factor
     #    is transformed to (0, 2) , the second is (1,2), the index to get
-    #    a color from the colSet vector is obtained by adding the two.
+    #    a color from the colSet vector is obtained by adding the two. This
+    #    gives us four different colours.
 
     colSet <- c("#00baff", "#0066ff", "#ff9900","#ff5500")
     colIndex <- ((as.integer(species) - 1) * 2) + as.integer(sex)

@@ -140,6 +140,65 @@ plot(crabs[, 5], crabs[, 6], xlim = c(0,50), ylim = c(0,50), pch=as.numeric(fac)
 plot(scale(crabs[, 5]), scale(crabs[, 6]), pch=as.numeric(fac))
 
 
+# TASK: Apply PCA to the crabs dataset to distinguish species and sex
+#       from morphometric measurements. Plot the results of important
+#       PCs as a scatterplot in which blue males are shown as blue
+#       triangles, orange males as orange triangles, blue females as
+#       blue circles and orange females as orange circles.
+#
+#       (Advanced: scale the plot symbols with the mean of all
+#                  individual measurements)
+
+# scale the data
+
+crabsS <- crabs
+crabsS[, 4:8] <- scale(crabs[,4:8])
+
+head(crabs)
+head(crabsS)
+
+boxplot(crabs[,4:8])
+boxplot(crabsS[,4:8])
+
+# run pca
+
+pcaS <- prcomp(crabsS[,4:8])
+pcaS
+
+plot(pcaS)
+
+plot(pcaS$x[,2], pcaS$x[,3],   # now "clusters" begin to become apparent
+     main = "PCA of scaled data")
+
+# compare to unscaled values
+
+pcaO <- prcomp(crabs[,4:8])
+plot(pcaO$x[,2], pcaO$x[,3],
+     main = "PCA of original data")   # now "clusters" begin to become apparent
+
+
+
+
+# plot the values
+
+plot(  pcaS$x[,2],         pcaS$x[,2], type ="n")
+points(pcaS$x[  1: 50, 2], pcaS$x[  1: 50, 3], pch=17, col="blue")
+points(pcaS$x[ 51:100, 2], pcaS$x[ 51:100, 3], pch=19, col="blue")
+points(pcaS$x[101:150, 2], pcaS$x[101:150, 3], pch=17, col="orange")
+points(pcaS$x[151:200, 2], pcaS$x[151:200, 3], pch=19, col="orange")
+
+
+plot(  pcaO$x[,2],         pcaO$x[,2], type ="n")
+points(pcaO$x[  1: 50, 2], pcaO$x[  1: 50, 3], pch=17, col="blue")
+points(pcaO$x[ 51:100, 2], pcaO$x[ 51:100, 3], pch=19, col="blue")
+points(pcaO$x[101:150, 2], pcaO$x[101:150, 3], pch=17, col="orange")
+points(pcaO$x[151:200, 2], pcaO$x[151:200, 3], pch=19, col="orange")
+
+
+
+
+
+
 # using vectors and named vectors to translate values into
 # different types of values
 
@@ -148,7 +207,7 @@ names(myValues) <- c("R", "W")
 myValues
 
 
-# tranlating index vectors to "map" values:
+# translating index vectors to "map" values:
 in1 <- c(1, 2, 1, 1, 2, 1)
 myValues[in1]
 
@@ -158,6 +217,7 @@ myValues[in2]
 
 # very(!) useful in many situations - e.g. map values to color, shape, or
 # size in a plot; map accession IDs to gene name; ...
+
 
 
 
