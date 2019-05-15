@@ -27,29 +27,14 @@
 #
 # == HOW TO WORK WITH THIS FILE ================================================
 #
-#  Go through this script line by line to read and understand the
-#  code. Execute code by typing <cmd><enter>. When nothing is
-#  selected, that will execute the current line and move the cursor to
-#  the next line. You can also select more than one line, e.g. to
-#  execute a block of code, or less than one line, e.g. to execute
-#  only the core of a nested expression.
-#
-#  DO NOT save edits to this file! Otherwise this will create a conflict
-#  when we update it. If you do edit it, save it under a new file name like
-#  myR-EDA-Introduction.R  Your "local" files will not be overwritten by
-#  updates.
-#
-#  If there are portions you don't understand, use R's help system,
-#  Google for an answer, or ask me. Don't continue if you don't
-#  understand what's going on. That's not how it works ...
-#
-#  Once you have typed and executed the function init(), you will find a file
-#  called myEDANotes.R in the project directory.
-#
-#  Open it, you can place all of your code-experiments and notes into that
-#  file. This will be your "Lab Journal" for this session. Copy code to
-#  myEDANotes.R to experiment with options, or just play.
+#  This file contains scenarios and tasks, we will discuss them in detail in
+#  class. If this file is named "myRegression.R", then edit it profusely,
+#  write code, experiment with options, or just play.
 #  Especially play.
+#
+#  If there is anything you don't understand, use R's help system,
+#  Google for an answer, or ask. Especially ask. Don't continue if you don't
+#  understand what's going on. That's not how it works ...
 #
 # ==============================================================================
 #
@@ -62,19 +47,19 @@
 #TOC> 
 #TOC>   Section  Title                                                  Line
 #TOC> ----------------------------------------------------------------------
-#TOC>   1        CORRELATION                                              85
-#TOC>   2        Synthetic data: a linear model                          159
-#TOC>   3        Applying regression to EDA                              276
-#TOC>   3.1        Scenario                                              294
-#TOC>   4        NON-LINEAR REGRESSION                                   382
-#TOC>   4.1        Reviewing the sine-wave model                         580
-#TOC>   4.2        Improve our fitting strategy - I                      659
-#TOC>   4.3        Improve outr fitting strategy - II                    768
-#TOC>   4.4        Model data for data mining                            931
-#TOC>   4.5        Parameter Distributions                              1064
-#TOC>   4.6        Ordering by expression peak                          1135
-#TOC>   4.7        Plotting cell-cycle progression                      1227
-#TOC>   5        Alternatives to Pearson correlation - the MIC          1314
+#TOC>   1        CORRELATION                                              70
+#TOC>   2        Synthetic data: a linear model                          144
+#TOC>   3        Applying regression to EDA                              261
+#TOC>   3.1        Scenario                                              279
+#TOC>   4        NON-LINEAR REGRESSION                                   367
+#TOC>   4.1        Reviewing the sine-wave model                         565
+#TOC>   4.2        Improve our fitting strategy - I                      644
+#TOC>   4.3        Improve outr fitting strategy - II                    753
+#TOC>   4.4        Model data for data mining                            916
+#TOC>   4.5        Parameter Distributions                              1049
+#TOC>   4.6        Ordering by expression peak                          1120
+#TOC>   4.7        Plotting cell-cycle progression                      1212
+#TOC>   5        Alternatives to Pearson correlation - the MIC          1299
 #TOC> 
 #TOC> ==========================================================================
 
