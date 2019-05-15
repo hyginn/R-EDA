@@ -1,12 +1,13 @@
-# R-EDA-Introduction.R
+# EDAintroduction.R
 #
 # Purpose:
 #
-# Version: 2.0
+# Version: 3.0
 #
-# Date:    2018  05
+# Date:    2019  05
 # Author:  Boris Steipe (boris.steipe@utoronto.ca)
 #
+# V 3.0    Reconceptualized 2019
 # V 2.0    Restructured for 2018 workshop
 # V 1.1    2017 updates
 # V 1.0    First code 2016
@@ -16,99 +17,97 @@
 #
 # == HOW TO WORK WITH THIS FILE ================================================
 #
-#  Go through this script line by line to read and understand the
-#  code. Execute code by typing <cmd><enter>. When nothing is
-#  selected, that will execute the current line and move the cursor to
-#  the next line. You can also select more than one line, e.g. to
-#  execute a block of code, or less than one line, e.g. to execute
-#  only the core of a nested expression.
-#
-#  DO NOT save edits to this file! Otherwise this will create a conflict
-#  when we update it. If you do edit it, save it under a new file name like
-#  myR-EDA-Introduction.R  Your "local" files will not be overwritten by
-#  updates.
-#
-#  If there are portions you don't understand, use R's help system,
-#  Google for an answer, or ask me. Don't continue if you don't
-#  understand what's going on. That's not how it works ...
-#
-#  Once you have typed and executed the function init(), you will find a file
-#  called myEDANotes.R in the project directory.
-#
-#  Open it, you can place all of your code-experiments and notes into that
-#  file. This will be your "Lab Journal" for this session. Copy code to
-#  myEDANotes.R to experiment with options, or just play.
+#  This file contains scenarios and tasks, we will discuss them in detail in
+#  class. If this file is named "myEDAintroduction.R", then edit it profusely,
+#  write code, experiment with options, or just play.
 #  Especially play.
 #
+#  If this file
+#
+#  If there is anything you don't understand, use R's help system,
+#  Google for an answer, or ask. Especially ask. Don't continue if you don't
+#  understand what's going on. That's not how it works ...
+#
 # ==============================================================================
 #
-# Module 1: EDA (Exploratory Data Analysis)
+# Introduction to EDA concepts
 #
 # ==============================================================================
 
 
 #TOC> ==========================================================================
 #TOC>
-#TOC>   Section  Title                                                 Line
-#TOC> ---------------------------------------------------------------------
-#TOC>   1        Project files and setup                                 85
-#TOC>   1.1        Optional tasks:                                      111
-#TOC>   1.2        Confirm setup                                        128
-#TOC>   2        Load Data                                              148
-#TOC>   2.1        Task: Getting data into R                            161
-#TOC>   2.2        Task: Read supplementary table S3 from Excel         211
-#TOC>   2.3        Digression: Factors in dataframes                    233
-#TOC>   3        Subsetting                                             294
-#TOC>   3.1        Subsetting data - Review of the principles           296
-#TOC>   3.1.1          A sample dataset                                 305
-#TOC>   3.1.2          Subsetting by index                              348
-#TOC>   3.1.2.1        Negative indices                                 392
-#TOC>   3.1.3          Subsetting by logical                            403
-#TOC>   3.1.3.1        Filtering by string matching expressions         456
-#TOC>   3.1.4          Subsetting by name                               474
-#TOC>   3.1.5          The "$" operator                                 507
-#TOC>   3.2        Subsetting Task                                      527
-#TOC>   4        Descriptive statistics and simple plots                552
-#TOC>   4.1        Quantiles                                            578
-#TOC>   4.1.1          Boxplot                                          596
-#TOC>   4.1.2          Violin plot                                      613
-#TOC>   4.2        Plotting principles                                  646
-#TOC>   4.3        QQ plots                                             661
-#TOC>   4.4        Lines and legends                                    668
-#TOC>   5        Exploring flow cytometry data                          701
-#TOC>   5.1        Explore scatter plots                                715
-#TOC>   5.2        Trellis plots: all against all                       786
+#TOC>   Section  Title                                               Line
+#TOC> -------------------------------------------------------------------
+#TOC>   1        SCENARIO AND SETUP                                    75
+#TOC>   1.1        Data:                                               95
+#TOC>   1.2        Optional tasks:                                    110
+#TOC>   2        LOAD DATA                                            128
+#TOC>   2.1        Task: Getting data into R                          145
+#TOC>   2.2        Task: Read an Excel table                          194
+#TOC>   2.3        Digression: Factors in dataframes                  234
+#TOC>   3        SUBSETTING                                           298
+#TOC>   3.1        Subsetting data - Review of the principles         300
+#TOC>   3.1.1          A sample dataset                               309
+#TOC>   3.1.2          Subsetting by index                            352
+#TOC>   3.1.2.1        Negative indices                               396
+#TOC>   3.1.3          Subsetting by logical                          407
+#TOC>   3.1.3.1        Filtering by string matching expressions       460
+#TOC>   3.1.4          Subsetting by name                             477
+#TOC>   3.1.5          The "$" operator                               511
+#TOC>   3.2        Subsetting Task                                    531
+#TOC>   4        DESCRIPTIVE STATISTICS AND SIMPLE PLOTS              553
+#TOC>   4.1        Quantiles                                          579
+#TOC>   4.1.1          Boxplot                                        597
+#TOC>   4.1.2          Violin plot                                    612
+#TOC>   4.2        Plotting principles                                649
+#TOC>   4.3        QQ plots                                           669
+#TOC>   5        EXPLORING SCATTERPLOTS                               692
+#TOC>   5.1        Explore scatter plots                              709
+#TOC>   5.2        Trellis plots: all against all                     781
 #TOC>
 #TOC> ==========================================================================
 
 
-# =    1  Project files and setup  =============================================
-#
-# What's in the box - overview of files specific to this module:
+updateTOC()  # <<< Execute to update the TOC
 
-#     ./assets
-#       Jaitin_paper.zip
-#       Weissgerber_2015_BeyondBarcharts.zip
-#
-#     ./data
-#        0TST.PDB
-#        Fig_3-CharacteristicGenes.txt
-#        table_S3.csv
-#        table_S3.xls
-#        GvHD.txt
-#
-#     ./R
-#       objectInfo.R
-#       functionTemplate
-#
-#     ./scripts
-#        PlottingReference.R
-#        RPR-RegEx.R
-#        scriptTemplate.R
-#        unitTesting.R
-#
 
-# ==   1.1  Optional tasks:  ===================================================
+# =    1  SCENARIO AND SETUP  ==================================================
+
+
+# EDA is exploration. The goal of EDA is to
+#   - uncover underlying structure;
+#   - define important variables;
+#   - detect outliers and anomalies;
+#   - detect trends;
+#   - develop statistical models;
+#   - test underlying assumptions.
+
+# A cornerstone of EDA is graphics: producing plots that visualize aspects of
+# your data: the observations that make up your data - viewed directly, under
+# transformation, in comparison to expectations, and integrated with other data.
+
+# Don't think of graphics as an afterthought: graphics are central to the story
+# about biology that you are telling, based on the facts you discover. Make
+# your story explicit, consider how good graphics supports it, get good at this.
+
+
+# ==   1.1  Data:  =============================================================
+
+# There are three datasets we will be working with in the next two days:
+#
+# - The "crabs" dataset is a staple of R data samples. It is part of the MASS
+#   package and conatains morphological measurements of Australian crabs
+#
+# - The "single cell" dataset is supplemental data from one of the
+#   earliest biological single-cell RNA seq studies, on immune cells, in
+#   Ido Amit's lab at the Weizman Institute.
+#
+# - The "cell cycle" dataset is a high resolution RNA seq study of expression
+#   changes in yeast, published in 2006 by the Breeden lab at the FHCRC.
+
+
+# ==   1.2  Optional tasks:  ===================================================
 # While you are waiting for others to finish a "Checkpoint"
 # here are suggestions:
 #
@@ -125,27 +124,12 @@
 #
 #   and work through the script in "./scripts/RPR-RegEx.R"
 
-# ==   1.2  Confirm setup  =====================================================
 
-# TASK: Confirm that everything is set up correctly:
-        getwd()          # Confirm the correct directory
-        list.files()     # Confirm that the right files are present.
-        list.files(all.files = TRUE)
-        list.dirs()
+# =    2  LOAD DATA  ===========================================================
 
-#        Check your "Environment pane": The functions:
-#           biCode()
-#           init()
-#           objectInfo()
-#           readFASTA
-#           ... should be present. These have been loaded on startup,
-#           thus confirming that the startup script has worked.
-#
-#       Check your "Files" pane: the file "myEDANotes.R" should exist.
-#       Open it.
+# We will explore gene expression data in this unit:
 
-
-# =    2  Load Data  ===========================================================
+source("./sampleSolutions/EDAintroductionSampleSolutions-ShowPlot.R")
 
 # Before we can do any kind of exploratory analysis, we first need to load data.
 # There are many sources - the Web, text files, Excel spread sheets. Here, we'll
@@ -158,7 +142,7 @@
 # Often the data we need can be copied and pasted from simple
 # text files.
 
-# ==   2.1  Task: Getting data into R  =========================================
+# ==   2.1  Task: Getting text data into R  =========================================
 
 # TASK: open the text file for "./data/Fig_3-CharacteristicGenes.txt".
 #       I have prepared this file from the text in a figure of
@@ -169,21 +153,30 @@
 #       Then, figure out if there is an R function that does this:
 #         - Open a textfile given its filename
 #         - Return a vector of strings
-
-#       (See "./sampleSolutions/sampleSolution-readText.R" if needed.)
-
+#       Assign the resulting vector to the variable name "charGenes"
 
 
-# TASK: open supplementary table 3 of Jaitin et al. in Excel (it's in your
-#       ./data folder ("./data/tableS3.xls"):
+insertSnip("gave.fact") # <<< Execute (if needed) to insert sample solution code
 
+
+
+# ==   2.2  Task: Read an Excel table  =========================================
+
+# I have included a dataset with this project, a .csv file taken from
+# suplementary data of a paper on tissue definition by single cell RNA seq, by
+# Jaitin et al. (2014).
+
+# http://www.ncbi.nlm.nih.gov/pubmed/24531970
+
+# This data set contains log2 fold changes of gene expression enrichment in
+# different cd11c+ cell populations, and their response to lipopolysaccharide
+# stimulation. It was posted as an Excel file on the Science Website.
 
 # A word on Excel: it's a very good spreadsheet program,
 # but it is miserable and often wrong on statistics,
 # and it makes horrible, horrible plots.
 
-# To elaborate - see the two links below:
-# http://www.practicalstats.com/xlsstats/excelstats.html
+# To elaborate - see the link below:
 # http://www.burns-stat.com/documents/tutorials/spreadsheet-addiction/
 # ... these are not merely cosmetic problems!
 
@@ -203,33 +196,38 @@
 ?readLines  # ... for reading in text-files line by line
 
 # Excel spreadsheets should be converted to csv or tsv format. Alternatively the
-# package xlsreadwrite is available via CRAN ... see
-# http://cran.r-project.org/web/packages/xlsReadWrite/ ... but I think this is
-# unsound practice.
+# readxl package is available via CRAN, see
+# https://cran.r-project.org/package=readxl ... but be very careful and double
+# and triple check your data.
 
-
-# ==   2.2  Task: Read supplementary table S3 from Excel  ======================
 
 # TASK:
-# 1 - load the data in table_S3.xls
-#     into Excel, and save it as
-#     a .csv (comma separated values) file.
-# 2 - Examine the file (a plain text file) in a
-#     text-editor (such as the RStudio editor).
-# 3 - Read the table into R, assigning it to a variable.
-#     I usually give the first input of data the variable
-#     name "rawDat" since it will usually be processed before
-#     it becomes meaningful for analysis.
-# 4 - Use head() to look at the beginning of the object.
-# 5 - Remove any unneeded header rows.
-# 6 - Give the columns names that reflect the cell type (cf.
-#     Figure 2c), and the stimulus status. Use cell abbreviations B, MF,
-#     NK, Mo, pDC, DC1 and DC2 and distinguish ctrl and LPS conditions.
-#     Call the last column "cluster".
-# 7 - Use objectInfo() to validate that the data frame you have created
-#     conforms to specifications. The first column is a character column,
-#     the other columns are numeric.
-# 8 - Call the final object "LPSdat"
+#  1 - load the supplementary data from the Jaitin et al. single cell study
+#      ./data/table_S3.xls into Excel, and save it as
+#      a .csv (comma separated values) file.
+#  2 - Examine the file (a plain text file) in a
+#      text-editor (such as the RStudio editor).
+#  3 - Read the table into R, assigning it to a variable.
+#      I usually give the first input of data the variable
+#      name "rawDat" or "tmp" since it will be processed before
+#      it becomes meaningful for analysis.
+#  4 - Use head() to look at the beginning of the object.
+#  5 - Remove any unneeded header rows.
+#  6 - Fix the rownames so they start at 1
+#  7 - Give the columns names that reflect the cell type (cf.
+#      Figure 2c), and the stimulus status. Use cell abbreviations B, MF,
+#      NK, Mo, pDC, DC1 and DC2 and distinguish ctrl and LPS conditions.
+#      Call the last column "cluster".
+#  8 - Change all expression values that were read as strings to "numeric"
+#  9 - Use str() to validate that the data frame you have created
+#      conforms to specifications. The first column is a character column,
+#      the other columns are numeric.
+# 10 - Assign the final object to the variable name "LPSdat"
+# 11 - What tests can you devise to validate the correctness of the data?
+
+
+insertSnip("file.dome") # <<< Execute (if needed) to insert sample solution code
+
 
 # ==   2.3  Digression: Factors in dataframes  =================================
 
@@ -240,24 +238,26 @@
 # that identify the "levels" of the factor.
 
 # To illustrate.
-genders <- factor(c("m", "f", "f", "m", "f"))
-genders
-objectInfo(genders)
-is.ordered(genders)
+sex <- factor(c("m", "f", "f", "m", "f"))
+sex
+str(sex)
+is.ordered(sex)
+
 
 # We can define ordered factors by adding some details to
 # our factor() command - e.g. tumor grades:
-
 
 sampleGrades <- factor(c("G1", "G3", "G3", "G1", "G2", "G1"),
                        levels = c("G1", "G2", "G3", "G4"),
                        ordered = TRUE)
 sampleGrades   # Note that G4 is a level although it
-# was not observed in the data
+               # was not observed in the data
 is.ordered(sampleGrades)
 
+
 # Factors are useful since they support a number of analysis
-# methods such as ordering boxplots, or calculating
+# methods such as ordering boxplots, or calculating regression on categorical
+# data.
 
 # For more on factors, have a look at this factor tutorial
 # by Jenny Bryan:
@@ -267,10 +267,10 @@ is.ordered(sampleGrades)
 #
 
 # But for our purposes, the default behavior of R, to
-# treat all strings as factors is entirely unwanted
+# treat all strings as factors is usually unwanted
 # and needs to be turned off. Always use the parameter
-# stringsAsFactors = FALSE to achieve this. If you don't
-# you are in for some bad surprises if e.g. there is
+# as.is = TRUE to achieve this. If you don't
+# you are in for some bad surprises if e.g. if there is
 # a character "contaminant" such as "NA" in a numeric column.
 
 # Note: you can change R's default behaviour and set a global
@@ -280,19 +280,20 @@ is.ordered(sampleGrades)
 #       assumptions about R's default behaviour and will thus
 #       fail.
 
-myDF <- data.frame(data = c("N/A", 1, 1, 2, 3, 5, 8))
-objectInfo(myDF)
-myDF <- myDF[-1, ]
-myDF
+# But consider the following carefully: this illustrates how work with factors
+# can go VERY wrong...
+(myDF <- data.frame(data = c("N/A", 1, 1, 2, 3, 5, 8)))
 
-myDF2 <- as.numeric(myDF)
-myDF2     # Whoa! what just happened ?
+str(myDF)
 
-myDF3 <- as.numeric(as.character(myDF))
-myDF3     # :-)
+(myDF <- myDF[-1, ])
+
+(myDF2 <- as.numeric(myDF))                # Whoa! what just happened ?
+
+(myDF3 <- as.numeric(as.character(myDF)))  # :-)
 
 
-# =    3  Subsetting  ==========================================================
+# =    3  SUBSETTING  ==========================================================
 
 # ==   3.1  Subsetting data - Review of the principles  ========================
 
@@ -305,7 +306,7 @@ myDF3     # :-)
 
 # ===   3.1.1  A sample dataset
 
-# Let's start with a small datframe of synthetic data to go through the main
+# Let's start with a small dataframe of synthetic data to go through the main
 # principles of subsetting. The same principles apply to matrices and vectors -
 # however, data frames are more flexible because their columns can contain data
 # of different types (character, numeric, logical ...). Values in vectors and
@@ -382,7 +383,7 @@ dat[sample(1:N, 3), 1:3]
 
 sort(dat[ , 2])    # ... gives us the sorted values
 
-order(dat[ , 2])   # ... tells us in which row the sorted values are
+    order(dat[ , 2])        # ... tells us in which row the sorted values are
 dat[order(dat[ , 2]), 1:3]  # ordered by number of legs
 dat[order(dat[ , 1]), 1:3]  # ordered by lexical order of names
 
@@ -397,12 +398,11 @@ dat[order(dat[ , 1]), 1:3]  # ordered by lexical order of names
 dat[-1, 1:3]   # not the first row
 dat[-N, 1:3]   # not the last row
 
-dat[-1:-3, 1:3]
+dat[-1:-3,  1:3]
 dat[-(1:3), 1:3]  # same effect
 
 
 # ===   3.1.3  Subsetting by logical
-
 
 # Instead of indices, we can specify sets of rows or columns by boolean values
 # (type: logical): TRUE or FALSE. If we place a vector of logicals into the
@@ -413,22 +413,22 @@ dat[1:3, c(TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)]
 
 # You need to take care that the number of elements exactly matches the number
 # of rows or columns, otherwise "vector recycling" will apply and this is
-# probably unintended. Thus explicitly specifying a boolean selection like above
+# usually unintended. Thus explicitly specifying a boolean selection like above
 # is not all that useful. However, many R functions are "vectorized" and
 # applying a logical expression or function to an entire column gives a vector
 # of TRUE and FALSE values of the same length. If we place this vector into the
 # square brackets, only the rows resp. columns for which the expression is TRUE
 # are returned.
 
-dat[ , 2]
-dat[ , 2] > 4          # See how this creates a vector
+    dat[ , 2]
+    dat[ , 2] > 4          # See how this creates a vector
 dat[dat[ , 2] > 4, 1:3]
 
 # Expressions can be combined with the "&" (and) and the "|" (or) operators.
 
-dat[ , 4] > 0
-dat[ , 5] < 0
-dat[ , 4] > 0 & dat[ , 5] < 0
+    dat[ , 4] > 0
+    dat[ , 5] < 0
+    dat[ , 4] > 0 & dat[ , 5] < 0
 dat[dat[ , 4] > 0 & dat[ , 5] < 0, ]
 
 # In this context, the any() and all() functions may be useful. But take care -
@@ -437,39 +437,39 @@ dat[dat[ , 4] > 0 & dat[ , 5] < 0, ]
 # function to first return a vector. apply()'s second argument switches between
 # row-wise and column-wise evaluation. Here, 1 means operate on rows."
 
-apply(dat[ , 4:8], 1, max)           # row-wise, fetch the maximum
-apply(dat[ , 4:8], 1, max) > 1       # max() > 1 ?
+    apply(dat[ , 4:8], 1, max)           # row-wise, fetch the maximum
+    apply(dat[ , 4:8], 1, max) > 1       # max() > 1 ?
 dat[apply(dat[ , 4:8], 1, max) > 1, ]
 
 # To use any() and all(), we define our own function."
 
-myF <- function(x){any(x > 1.5)}
+myF <- function(x){ any(x > 1.5) }
 myF(dat[3, 4:8])
 
-apply(dat[ , 4:8], 1, myF)
+    apply(dat[ , 4:8], 1, myF)
 dat[apply(dat[ , 4:8], 1, myF), ]
 
 # But we can also write the definition "in place"...
-apply(dat[ , 4:8], 1, function(x){all(x < 0.5)})
+    apply(dat[ , 4:8], 1, function(x){ all(x < 0.5) })
 
-dat[apply(dat[ , 4:8], 1, function(x){all(x < 0.5)}), ]
+dat[apply(dat[ , 4:8], 1, function(x){ all(x < 0.5)} ), ]
+
 
 # ====  3.1.3.1  Filtering by string matching expressions
 
 # The function grep(), and the %in% operator can be used to subset via string
 # matching:
 
-grep("r", dat[ , 3])          # types that contain "r"
+    grep("r", dat[ , 3])          # types that contain "r"
 dat[grep("r", dat[ , 3]), 1:3]
 
-grep("^c", dat[ , 3])         # types that begin with "c"
+    grep("^c", dat[ , 3])         # types that begin with "c"
 dat[grep("^c", dat[ , 3]), 1:3]
 
 
 scary <- c("spider", "centipede")
-dat[ , 3] %in% scary
+    dat[ , 3] %in% scary
 dat[dat[ , 3] %in% scary, 1:3]
-
 
 
 # ===   3.1.4  Subsetting by name
@@ -491,9 +491,9 @@ dat[1:5, "eyes"]   # error, that name does not exist
 # We can combine the techniques e.g. to flexibly select columns. Here we select
 # the X1 to X5 columns:
 
-colnames(dat)
-grep("^X", colnames(dat))
-colnames(dat)[grep("^X", colnames(dat))]
+                                  colnames(dat)
+                       grep("^X", colnames(dat))
+         colnames(dat)[grep("^X", colnames(dat))]
 dat[1:3, colnames(dat)[grep("^X", colnames(dat))]]
 
 # This is very useful when the exact position of columns may have changed during
@@ -505,6 +505,7 @@ dat[1:3, colnames(dat)[grep("^X", colnames(dat))]]
 # when you need a slice of the data for testing purposes, but even then it may
 # be preferrable to use the head() or tail() functions.
 
+
 # ===   3.1.5  The "$" operator
 
 # The "$" operator returns a single column as a vector. It is not strictly
@@ -515,8 +516,8 @@ dat[1:3, "legs"]
 dat$legs[1:3]    # same result. This is the preferred version.
 dat$"legs"[1:3]  # works, but isn't necessary
 dat[1:3, legs]   # this returns an error - hopefully; but if for any
-# reason the object DOES exist, you'll get an un-
-# expected result. Know when to quote!
+                 # reason the object DOES exist, you'll get an un-
+                 # expected result. Know when to quote!
 
 
 # Three more functions that I use all the time for data manipulation:
@@ -527,10 +528,10 @@ dat[1:3, legs]   # this returns an error - hopefully; but if for any
 
 # ==   3.2  Subsetting Task  ===================================================
 
-# TASK: Write R expressions that get the following data from LPSdat:
+# TASK:
+#   Write R expressions that get the following data from LPSdat:
 
-
-#      - rows 1:10 of the first two columns in reverse order
+#      - rows 1:10 of the first three columns in reverse order
 
 #      - gene names and the expression values for Mo.LPS
 #        for the top ten expression values.
@@ -543,11 +544,14 @@ dat[1:3, legs]   # this returns an error - hopefully; but if for any
 #        (hint: use the  %in%  operator)
 
 
+insertSnip("blot.pipe") # <<< Execute (if needed) to insert sample solution code
+
+
 # With these simple subsetting and filtering operations, we are already
 # "Exploring data".
 
 
-# =    4  Descriptive statistics and simple plots  =============================
+# =    4  DESCRIPTIVE STATISTICS AND SIMPLE PLOTS  =============================
 
 set.seed(100)
 x <- rnorm(100, mean=0, sd=1)
@@ -558,19 +562,10 @@ var(x)
 sd(x)
 summary(x)
 
-# Task:
-# 1 - What would be interesting characterizations
-#     of LPSdat? Explore them.
+# TASK:
+#  1 - Explore interesting characterizations of LPSdat.
 
-# Example: mean baseline expression of gene in row 5
-a <- LPSdat[5, 2:15]
-a
-b <- as.numeric(a)
-mean(b)
-mean(as.numeric(LPSdat[5, seq(2, 14, by = 2)]))
 
-# Example: What are the most responsive genes for two
-# cell types?
 
 
 # ==   4.1  Quantiles  =========================================================
@@ -591,6 +586,7 @@ quantile(x)
 quantile(x, probs=c(0.1, 0.2, 0.9))
 abline(v=quantile(x, probs=c(0.9)), col="green", lwd=3)
 
+
 # ===   4.1.1  Boxplot
 
 set.seed(100)
@@ -606,16 +602,29 @@ x <- c(x, rnorm(100, mean=2, sd=1))
 hist(x)
 boxplot(x)
 
+# you can use jitter() to show the actual observations
+
+plot(jitter(rep(0.5, length(x))), x, xlim = c(0, 1))
+plot(jitter(rep(0.5, length(x))), x,
+     xlim=c(0, 1),
+     pch=21,
+     col="#00228855",
+     bg="#0077FF44",
+     cex = 1.4)
+
+
 # ===   4.1.2  Violin plot
 #
-if (!require(ggplot2, quietly=TRUE)) {
+if (!requireNamespace("ggplot2", quietly=TRUE)) {
     install.packages("ggplot2")
-    library(ggplot2)
 }
+library(ggplot2)
+
 X <- as.data.frame(x)
 
 p <- ggplot(X, aes(1,x))
 p + geom_violin()
+
 # See ggplot2 introductory tutorial at
 #     http://www.r-bloggers.com/basic-introduction-to-ggplot2/
 # and violin plot documentation at
@@ -629,6 +638,9 @@ boxplot(LPSdat[ ,c("NK.ctrl", "NK.LPS")])
 boxplot(LPSdat[ , c(seq(2, 14, by = 2), seq(3, 15, by = 2))])
 abline(v=7.5)
 
+# TODO colours !
+
+
 # TASK:
 # 1 - What would be interesting quantiles
 #     and boxplots in LPSdat?
@@ -636,6 +648,7 @@ abline(v=7.5)
 #
 #     Interpret the results !
 
+# TODO: quantile normalization
 
 # ==============================================================================
 
@@ -649,10 +662,11 @@ abline(v=7.5)
 # Overlay a histogram with a line plot
 myStim <- LPSdat$B.LPS - LPSdat$B.ctrl
 hist(myStim,
+     freq = FALSE,
+     breaks = 40,
      col="#0066AA44",
      main = "B.LPS - B.ctrl",
-     xlab = "stimulation (delta(log(expression))",
-     freq = FALSE)
+     xlab = "stimulation (delta(log(expression))")
 xVals <- seq(min(myStim),max(myStim),0.1)
 lines(xVals, dnorm(xVals, sd = sd(myStim)), col="#CC000055")
 
@@ -681,7 +695,10 @@ qqplot(myStim, myBase, pch =  21, bg = "#00AA6622")
 #       a qqplot? Explore this. Interpret the result.
 
 
-# =    5  Exploring flow cytometry data  =======================================
+# =    5  EXPLORING SCATTERPLOTS  ==============================================
+
+# TODO Change this to to one of the three datasets - e.g.
+
 
 # GvHD flow cytometry data is a sample dataset provided in the project.
 gvhd <- read.table("./data/GvHD.txt", header=TRUE)
@@ -694,6 +711,28 @@ hist(gvhd[,5])
 gvhdCD3p <- as.data.frame(gvhd[gvhd[, 5]>280, 3:6])
 
 plot(gvhdCD3p[, 1:2])
+
+stimDC2 <- LPSdat$DC2.LPS - LPSdat$DC2.ctrl
+stimNK  <- LPSdat$NK.LPS  - LPSdat$NK.ctrl
+
+# A dataframe of differences:
+
+stims <- data.frame(genes = LPSdat$genes,
+                    dB   = LPSdat$B.LPS   - LPSdat$B.ctrl,
+                    dMF  = LPSdat$MF.LPS  - LPSdat$MF.ctrl,
+                    dNK  = LPSdat$NK.LPS  - LPSdat$NK.ctrl,
+                    dMo  = LPSdat$Mo.LPS  - LPSdat$Mo.ctrl,
+                    dpDC = LPSdat$pDC.LPS - LPSdat$pDC.ctrl,
+                    dDC1 = LPSdat$DC1.LPS - LPSdat$DC1.ctrl,
+                    dDC2 = LPSdat$DC2.LPS - LPSdat$DC2.ctrl,
+                    stringsAsFactors = FALSE)
+
+plot(stims$dMF, stims$dpDC,
+     pch=21,
+     col="#00228855",
+     bg="#0077FF44",
+     cex = 1.4)
+
 
 # ==   5.1  Explore scatter plots  =============================================
 
@@ -715,75 +754,58 @@ plot(gvhdCD3p[, 1:2])
 # for dense plots:
 
 # load "hexbin" package from CRAN
-if (!require(hexbin, quietly=TRUE)) {
+if (!requireNamespace(hexbin, quietly=TRUE)) {
     install.packages("hexbin")
-    library(hexbin)
 }
+library(hexbin)
 
 # variant one: hexbin
-hb <- hexbin(gvhdCD3p[, 1:2], xbins = 20)
+hb <- hexbin::hexbin(stims$dMF, stims$dpDC, xbins = 20)
+plot(hb)
 plot(hb, colramp = colorRampPalette(c("#FFFFDD",
                                       "#77EE99",
                                       "#3377AA",
                                       "#0033BB")))
 
 # === variant two: smoothScatter
-smoothScatter(gvhdCD3p[, 1:2],
+smoothScatter(stims$dMF, stims$dpDC,
               nrpoints = 0,
               pch=20,
               cex=0.5,
               col="#6633BB55")
 
 # === variant three: colors vary by density
-plot(gvhdCD3p[, c(1,2)],
-     col=densCols(gvhdCD3p[, 1], gvhdCD3p[, 2]),
+plot(stims$dMF, stims$dpDC,
+     col=densCols(stims$dMF, stims$dpDC),
      pch=16,
      cex=2)
 
 # === variant four: analysis with specialized package
 # load "prada" package from BioConductor
-if (!require(prada, quietly=TRUE)) {
-    source("http://www.bioconductor.org/biocLite.R")
-    biocLite("prada")
+if (!requireNamespace("BiocManager", quietly=TRUE)) {
+  install.packages("BiocManager")
+}
+if (!requireNamespace("prada", quietly=TRUE)) {
+  BiocManager::install("prada")
 }
 
 # using functions ?fitNorm2 and plotNorm2 from the prada package
-nfit <- fitNorm2(gvhdCD3p[, 1], gvhdCD3p[, 2])
-plotNorm2(nfit, selection=TRUE, ellipse=TRUE)
-
-# ==============================================================================
-
-# TASK:
-# 1 - Create a scatterplot from differences in
-#     LPS activation between a pair of cell types in LPSdat.
-# 2 - Add a line that shows the situation if all
-#     activations were equal.
-
-plot(LPSdat[ ,"Mo.ctrl"] - LPSdat[ ,"Mo.LPS"],
-     LPSdat[ ,"MF.ctrl"] - LPSdat[ ,"MF.LPS"])
-abline(0,1,col = "red")
-
-# 3 - Redo the plot with density coloring
-
-
+nfit <- prada::fitNorm2(stims$dMF, stims$dpDC)
+prada::plotNorm2(nfit, selection=TRUE, ellipse=TRUE)
 
 # ==   5.2  Trellis plots: all against all  ====================================
 
-plot(gvhdCD3p, pch=".")
+plot(stims[ , 2:8], pch=".", col = "#44BB6633")
 
-boxplot(gvhdCD3p)
+boxplot(stims[ , 2:8])
 
 
 oPar <- par(mfrow=c(2, 2))
 
-hist(gvhdCD3p[, 1], 50,
-     main=names(gvhdCD3p)[1], xlab="fluorescent intensity", ylim=c(0, 120))
-hist(gvhdCD3p[, 2], 50,
-     main=names(gvhdCD3p)[2], xlab="fluorescent intensity", ylim=c(0, 120))
-hist(gvhdCD3p[, 3], 50,
-     main=names(gvhdCD3p)[3], xlab="fluorescent intensity", ylim=c(0, 120))
-hist(gvhdCD3p[, 4], 50,
-     main=names(gvhdCD3p)[4], xlab="fluorescent intensity", ylim=c(0, 120))
+hist(stims$dB,  breaks=40, main="dB",  freq=FALSE, ylim=c(0,1.5), col="#cffff1")
+hist(stims$dNK, breaks=40, main="dNK", freq=FALSE, ylim=c(0,1.5), col="#cbe5ff")
+hist(stims$dMo, breaks=40, main="dMo", freq=FALSE, ylim=c(0,1.5), col="#ecddff")
+hist(stims$dMF, breaks=40, main="dMF", freq=FALSE, ylim=c(0,1.5), col="#c9f5ff")
 
 par(oPar)
 

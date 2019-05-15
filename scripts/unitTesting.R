@@ -2,12 +2,13 @@
 #
 # Purpose:  Intro to unit-testing with the testthat package
 #
-# Version:  1.0
+# Version:  1.1
 #
-# Date:     2017  10  15
+# Date:     2019  05  14
 # Author:   Boris Steipe (boris.steipe@utoronto.ca)
 #
 # Versions:
+#           1.1    2019 Updates
 #           1.0    Derived from ABC Units code
 #
 #

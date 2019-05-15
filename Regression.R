@@ -1,13 +1,14 @@
-# R_EDA-Regression.R
+# Regression.R
 # Purpose:
 #     Introduction to regression analysis in biological data with R
 #
 # Author:  Boris Steipe (boris.steipe@utoronto.ca)
 #
-# Version: 2
-# Date:    2018 05
+# Version: 3.0
+# Date:    2019 05 14
 #
 # Version history:
+#        V 3.0  Reconceived for 2019 workshop
 #        V 2.0  Restructuring 2018, changed nls() from logistic to
 #                 cyclic data
 #        V 1.1  2017 version
@@ -17,9 +18,11 @@
 #              Raphael Gottardo, FHCRC
 #              Sohrab Shah, UBC
 #
-# TODO: Tighten up and simplify nls part, factor out main functions and
-#       helper functions.
-#       Include the scripts that were used to prepare the data.
+# TODO: - Tighten up and simplify nls part, factor out main functions and
+#         helper functions.
+#       - Include the scripts that were used to prepare the data.
+#       - put solutions into "peek" scripts.
+#
 #
 #
 # == HOW TO WORK WITH THIS FILE ================================================
@@ -50,7 +53,7 @@
 #
 # ==============================================================================
 #
-# Module 2: Regression
+#        R E G R E S S I O N
 #
 # ==============================================================================
 
@@ -76,7 +79,16 @@
 #TOC> ==========================================================================
 
 
-# =    1  Correlation  =========================================================
+updateTOC()   # <<<--- Execute this to update the TOC
+
+
+# =    1  CORRELATION  =========================================================
+
+# In this unit we will explore correlation and regression. Our exploration will
+# lead us to cell-cycle genes.
+
+source("./sampleSolutions/regressionSampleSolutions-ShowPlot.R")
+
 
 # In principle, correlation between two variables measures the degree to which
 # the value of one variable can be predicted from the value of the other. In
@@ -88,7 +100,7 @@
 # coeffecient of correlation values range from -1 to 1, with 0 indicating no
 # correlation.
 
-# Lets explore intutively what correlation values mean for data:
+# Lets train our intuition about what correlation values mean for data:
 
 set.seed(12357)
 x <- rnorm(50) # 50 random deviates from a N(0,1)
@@ -248,16 +260,16 @@ matlines(HW2$heights, pp, lty=c(1,3,3), col="firebrick")
 # Practice
 
 # In our LPS data, MF and Mo aught to respond similarly to LPS challenge.
-# If so, the LPS - ctrl data should be hoghly correletd.
+# If so, the LPS - ctrl data should be highly correlated.
 #
 # TASK:
 #  -  is that the case?
 #  -  plot the scatterplot for this hypothesis,
 #  -  calculate a linear fit
 #  -  assess whether there is a linear correlation.
-#
 
-
+# TODO
+# A glimpse at glm - linearizing data
 
 
 
@@ -362,7 +374,7 @@ cor(ygProfiles[iRow, ], myShiftedModel)    # No significant correlation
 # measly -0.03 coefficient of correlation with the our original model, whereas
 # shifting the model profile by 15 minutes gives a high correlation of 0.81.
 # However - we don't know what the best shift should be, and indeed, whether our
-# assumed period of 60  inutes is even correct. In order to more generally find
+# assumed period of 60 minutes is even correct. In order to more generally find
 # genes of interest, we need to consider fitting the data to a model with
 # adjustable parameters: we need non-linear curve fitting.
 
@@ -707,7 +719,7 @@ for (i in 1:N) {
   }
 }
 
-# Let's plot correlation / Amplitude side by side. For ease of comparison, we'll
+# Let's plot correlation / amplitude side by side. For ease of comparison, we'll
 # flip all nlsResult amplitudes to be negative, and we'll flip all
 # nlsBestFitResults to be positive. And we'll plot them as solid dots, with high
 # transparency to better visualize the density.
@@ -832,9 +844,8 @@ plotModel(t, A = 0.5, k = -0.008, thisCol = "#22EE66", plt = FALSE)
 # we need to use the "port" algorithm of nls(). Finally, if we can't get any fit
 # with nls(), we try fitting with nlrob() from the library robustbase
 
-if (!require(robustbase)) {
+if (!requireNamespace("robustbase")) {
   install.packages("robustbase")
-  library(robustbase)
 }
 
 
@@ -872,11 +883,11 @@ bestFit <- function(y) {
     best <- which(nlsCors == max(abs(nlsCors)))[1]
     return(nlsFits[[best]])
   } else { # no fit possible - try with nlrob()
-    myFit <- nlrob(y ~ cycEx2(t, A, phi, f, k, B),
-                   data = data.frame(y = y, t = t),
-                   method = "mtl",
-                   lower = myLower,
-                   upper = myUpper)
+    myFit <- robustbase::nlrob(y ~ cycEx2(t, A, phi, f, k, B),
+                               data = data.frame(y = y, t = t),
+                               method = "mtl",
+                               lower = myLower,
+                               upper = myUpper)
     return(myFit)
   }
 }
@@ -933,7 +944,7 @@ nlsParams <- data.frame(A = numeric(N),
                         call = character(N),
                         stringsAsFactors = FALSE)
 for (i in 1:N) {
-  pBar(i, N)  # print a progress bar (function in .utilities.R)
+  pBar(i, N)  # print a progress bar
   y <- ygProfiles[i,]
   myFit <- bestFit(y)
   if (length(myFit) > 0) {
@@ -952,10 +963,10 @@ for (i in 1:N) {
 sum(nlsParams$call == "nls")
 sum(nlsParams$call == "nlrob")
 
-# ... the results are saved in "nlsParams.RData" and can be loaded from there if
-# you don't want to wait for the processing.
+# ... when I ran this, I saved the results in "nlsParams.RData" and you can
+# load them from there if you don't want to wait for the processing.
 # save(nlsParams, file = "nlsParams.RData")
-load(file = "nlsParams.RData")
+load(file = "./data/nlsParams.RData")
 
 
 # Again, how much has the overall fit improved?
@@ -967,7 +978,7 @@ points(-abs(nlsBestFitResults$A),
 points(abs(nlsParams$A), nlsParams$cor, col="#333FDD07")
 
 # Qualitatively, we see great improvement, and quantitatively, eg. considering
-# the number of gene expression profiles we have fit with a coefficient of
+# the number of gene expression profiles that we have fit with a coefficient of
 # correlation better than 0.8 ...
 
 sum(nlsResults$cor > 0.8)
@@ -982,7 +993,7 @@ sum(nlsParams$cor > 0.8)
 # annotating a gene as a cell-cycle gene.
 
 # For further plotting, we construct two helper functions: a function that
-# returns the first positive peak, and a function taht marks its position on a
+# returns the first positive peak, and a function that marks its position on a
 # plot with a triangle.
 #
 
@@ -1144,11 +1155,11 @@ abline(h = log10(c(0.75, 1.333)), col = "#66EEAA", lwd = 0.5)
 # have phase shifts in a much narrower range:
 
 sel <- which(nlsParams$A > 0.1 &
-               nlsParams$cor > 0.75 &
-               nlsParams$f > 0.75 &
-               nlsParams$f < 1.333 &
-               nlsParams$k < 0.03 &
-               nlsParams$k > -0.0005)
+             nlsParams$cor > 0.75 &
+             nlsParams$f > 0.75 &
+             nlsParams$f < 1.333 &
+             nlsParams$k < 0.03 &
+             nlsParams$k > -0.0005)
 
 # Good choices?
 exploreFits(sel)
