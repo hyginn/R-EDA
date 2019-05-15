@@ -38,3 +38,10 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 .Rproj.user
+
+# local versions
+my*
+assets/Jaitin-2014_SingleCellRNAseq.pdf
+assets/Pramila-2006_YeastCellCycle.pdf
+assets/Weissgerber-2015_BeyondBarcharts.pdf
+private/
