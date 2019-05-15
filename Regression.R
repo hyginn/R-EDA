@@ -59,23 +59,23 @@
 
 
 #TOC> ==========================================================================
-#TOC>
+#TOC> 
 #TOC>   Section  Title                                                  Line
 #TOC> ----------------------------------------------------------------------
-#TOC>   1        Correlation                                              77
-#TOC>   2        Synthetic data: a linear model                          145
-#TOC>   3        Applying regression to EDA                              247
-#TOC>   3.1        Scenario                                              265
-#TOC>   4        NON-LINEAR REGRESSION                                   353
-#TOC>   4.1        Reviewing the sine-wave model                         551
-#TOC>   4.2        Improve our fitting strategy - I                      630
-#TOC>   4.3        Improve outr fitting strategy - II                    739
-#TOC>   4.4        Model data for data mining                            903
-#TOC>   4.5        Parameter Distributions                              1036
-#TOC>   4.6        Ordering by expression peak                          1107
-#TOC>   4.7        Plotting cell-cycle progression                      1199
-#TOC>   5        Alternatives to Pearson correlation - the MIC          1286
-#TOC>
+#TOC>   1        CORRELATION                                              85
+#TOC>   2        Synthetic data: a linear model                          159
+#TOC>   3        Applying regression to EDA                              276
+#TOC>   3.1        Scenario                                              294
+#TOC>   4        NON-LINEAR REGRESSION                                   382
+#TOC>   4.1        Reviewing the sine-wave model                         580
+#TOC>   4.2        Improve our fitting strategy - I                      659
+#TOC>   4.3        Improve outr fitting strategy - II                    768
+#TOC>   4.4        Model data for data mining                            931
+#TOC>   4.5        Parameter Distributions                              1064
+#TOC>   4.6        Ordering by expression peak                          1135
+#TOC>   4.7        Plotting cell-cycle progression                      1227
+#TOC>   5        Alternatives to Pearson correlation - the MIC          1314
+#TOC> 
 #TOC> ==========================================================================
 
 

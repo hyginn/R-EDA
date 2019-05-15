@@ -7,9 +7,11 @@ cat("Initializing ...\n")
 
 # Source local functions
 cat("    sourcing local functions from \"./R\" directory ...\n")
-for (script in list.files(path = "./R",
-                          pattern = "\\.R$",
-                          full.names = TRUE)) {
+fileList <- list.files(path = c("./R", "./dev"),
+                       pattern = "\\.R$",
+                       full.names = TRUE)
+
+for (script in fileList) {
     source(script)
     cat(sprintf("        ... %s\n", script))
 }
@@ -51,7 +53,9 @@ writeMyCopy <- function(FN, prefix = "my", outFile) {
 }
 
 # Create a local copy of all core .R modules if those copies don't exist yet.
-writeMyCopy("tmp.R", outFile = "myEDANotes.R")
+writeMyCopy("journal.md", outFile = "myJournal.md")
+writeMyCopy("EDAintroduction.R")
+writeMyCopy("regression.R")
 
 
 # Clean up
@@ -64,4 +68,4 @@ cat("... done.\n")
 file.edit("R-EDA.R")
 
 
-# [End]
+# [END]
