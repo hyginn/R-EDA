@@ -22,21 +22,19 @@
 #  write code, experiment with options, or just play.
 #  Especially play.
 #
-#  If this file
-#
 #  If there is anything you don't understand, use R's help system,
 #  Google for an answer, or ask. Especially ask. Don't continue if you don't
 #  understand what's going on. That's not how it works ...
 #
 # ==============================================================================
 #
-# Introduction to EDA concepts
+#     I N T R O D U C T I O N  T O   E D A   C O N C E P T S
 #
 # ==============================================================================
 
 
 #TOC> ==========================================================================
-#TOC> 
+#TOC>
 #TOC>   Section  Title                                               Line
 #TOC> -------------------------------------------------------------------
 #TOC>   1        SCENARIO AND SETUP                                    75
@@ -44,28 +42,28 @@
 #TOC>   1.2        Optional tasks:                                    110
 #TOC>   2        LOAD DATA                                            128
 #TOC>   2.1        Task: Getting text data into R                     145
-#TOC>   2.2        Task: Read an Excel table                          163
-#TOC>   2.3        Digression: Factors in dataframes                  232
-#TOC>   3        SUBSETTING                                           296
-#TOC>   3.1        Subsetting data - Review of the principles         298
-#TOC>   3.1.1          A sample dataset                               307
-#TOC>   3.1.2          Subsetting by index                            350
-#TOC>   3.1.2.1        Negative indices                               394
-#TOC>   3.1.3          Subsetting by logical                          405
-#TOC>   3.1.3.1        Filtering by string matching expressions       458
-#TOC>   3.1.4          Subsetting by name                             475
-#TOC>   3.1.5          The "$" operator                               509
-#TOC>   3.2        Subsetting Task                                    529
-#TOC>   4        DESCRIPTIVE STATISTICS AND SIMPLE PLOTS              554
-#TOC>   4.1        Quantiles                                          571
-#TOC>   4.1.1          Boxplot                                        590
-#TOC>   4.1.2          Violin plot                                    616
-#TOC>   4.2        Plotting principles                                655
-#TOC>   4.3        QQ plots                                           675
-#TOC>   5        EXPLORING SCATTERPLOTS                               698
-#TOC>   5.1        Explore scatter plots                              737
-#TOC>   5.2        Trellis plots: all against all                     796
-#TOC> 
+#TOC>   2.2        Task: Read an Excel table                          211
+#TOC>   2.3        Digression: Factors in dataframes                  280
+#TOC>   3        SUBSETTING                                           344
+#TOC>   3.1        Subsetting data - Review of the principles         346
+#TOC>   3.1.1          A sample dataset                               355
+#TOC>   3.1.2          Subsetting by index                            398
+#TOC>   3.1.2.1        Negative indices                               442
+#TOC>   3.1.3          Subsetting by logical                          453
+#TOC>   3.1.3.1        Filtering by string matching expressions       506
+#TOC>   3.1.4          Subsetting by name                             523
+#TOC>   3.1.5          The "$" operator                               557
+#TOC>   3.2        Subsetting Task                                    577
+#TOC>   4        DESCRIPTIVE STATISTICS AND SIMPLE PLOTS              602
+#TOC>   4.1        Quantiles                                          619
+#TOC>   4.1.1          Boxplot                                        638
+#TOC>   4.1.2          Violin plot                                    664
+#TOC>   4.2        Plotting principles                                703
+#TOC>   4.3        QQ plots                                           723
+#TOC>   5        EXPLORING SCATTERPLOTS                               746
+#TOC>   5.1        Explore scatter plots                              785
+#TOC>   5.2        Trellis plots: all against all                     844
+#TOC>
 #TOC> ==========================================================================
 
 
@@ -157,7 +155,6 @@ source("./sampleSolutions/EDAintroductionSampleSolutions-ShowPlot.R")
 
 
 insertSnip("gave.fact") # <<< Execute (if needed) to insert sample solution code
-
 
 
 # ==   2.2  Task: Read an Excel table  =========================================
@@ -304,7 +301,7 @@ str(myDF)
 # that support these tasks.
 
 
-# ===   3.1.1  A sample dataset                          
+# ===   3.1.1  A sample dataset
 
 # Let's start with a small dataframe of synthetic data to go through the main
 # principles of subsetting. The same principles apply to matrices and vectors -
@@ -347,7 +344,7 @@ str(dat)
 ?"["
 
 
-# ===   3.1.2  Subsetting by index                       
+# ===   3.1.2  Subsetting by index
 
 # Elements can be uniquely identified by indices in the range of their length
 # (for vectors), or their rows and columns (in dataframes and matrices). The
@@ -391,7 +388,7 @@ dat[order(dat[ , 1]), 1:3]  # ordered by lexical order of names
 # individually, then see how they fit into the brackets to subset the data.
 
 
-# ====  3.1.2.1  Negative indices                          
+# ====  3.1.2.1  Negative indices
 
 # If you specify a negative index, that element is excluded.
 
@@ -402,7 +399,7 @@ dat[-1:-3,  1:3]
 dat[-(1:3), 1:3]  # same effect
 
 
-# ===   3.1.3  Subsetting by logical                     
+# ===   3.1.3  Subsetting by logical
 
 # Instead of indices, we can specify sets of rows or columns by boolean values
 # (type: logical): TRUE or FALSE. If we place a vector of logicals into the
@@ -455,7 +452,7 @@ dat[apply(dat[ , 4:8], 1, myF), ]
 dat[apply(dat[ , 4:8], 1, function(x){ all(x < 0.5)} ), ]
 
 
-# ====  3.1.3.1  Filtering by string matching expressions  
+# ====  3.1.3.1  Filtering by string matching expressions
 
 # The function grep(), and the %in% operator can be used to subset via string
 # matching:
@@ -472,7 +469,7 @@ scary <- c("spider", "centipede")
 dat[dat[ , 3] %in% scary, 1:3]
 
 
-# ===   3.1.4  Subsetting by name                        
+# ===   3.1.4  Subsetting by name
 
 # If rownames and/or columnnames have been defined, we can use these for
 # selection. If not defined, they default to the row/column numbers as character
@@ -506,7 +503,7 @@ dat[1:3, colnames(dat)[grep("^X", colnames(dat))]]
 # be preferrable to use the head() or tail() functions.
 
 
-# ===   3.1.5  The "$" operator                          
+# ===   3.1.5  The "$" operator
 
 # The "$" operator returns a single column as a vector. It is not strictly
 # necessary - the column can just as well be named in quotation marks within the
@@ -587,7 +584,7 @@ quantile(x, probs=c(0.1, 0.2, 0.9))
 abline(v=quantile(x, probs=c(0.9)), col="green", lwd=3)
 
 
-# ===   4.1.1  Boxplot                                   
+# ===   4.1.1  Boxplot
 
 set.seed(100)
 x <- rnorm(1000, mean=5, sd=2.5)
@@ -613,7 +610,7 @@ plot(jitter(rep(0.5, length(x))), x,
      cex = 1.4)
 
 
-# ===   4.1.2  Violin plot                               
+# ===   4.1.2  Violin plot
 #
 if (!requireNamespace("ggplot2", quietly=TRUE)) {
     install.packages("ggplot2")
@@ -814,3 +811,4 @@ par(oPar)
 
 
 # [END]
+

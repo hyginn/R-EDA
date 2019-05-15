@@ -23,7 +23,7 @@ charGenes <- c("Cd19", "Cd79b", "Cd22", "Cd37", "Ctsd",
 ## details of your file from you (like the file extension). Fortunately, you
 ## already have one: you can use RStudio as a code editor, but also as a
 ## plain-text editor! It's actually a really good text editor, since it
-## supports multi-line coliumn selections.
+## supports multi-line column selections.
 
 
 ## Solution 2: Use the read.csv() function  =============================
@@ -32,12 +32,12 @@ charGenes <- read.csv("./data/Fig_3-CharacteristicGenes.txt",
                       stringsAsFactors = FALSE)
 
 ## Note: this produces a dataframe. This is super useful if we need to work
-## with data from an Excel spreadsheet! Simply save the data as csv to then
+## with data from an Excel spreadsheet! Simply save the data as csv, then
 ## import it into R.
 
 charGenes$V1
 charGenes[ , "V1"]
-unlist(charGenes)
+unlist(charGenes)     # turn the dataframe into a vector
 
 
 ##  Solution 2: Use the readLines() function
