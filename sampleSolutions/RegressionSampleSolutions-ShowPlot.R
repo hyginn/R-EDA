@@ -58,7 +58,8 @@ axis(2, at = yTicks, labels = c("100", "300", "500", "700"))
 
 
 # clean up
-rm(dat27d51984)
+rm(exVals, iRow, N, yTicks)
+rm(dat3c7be868)
 rm(datd294e201)
 
 # [END]
