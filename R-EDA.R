@@ -148,35 +148,29 @@ getwd()          # Confirm the correct directory
 #   Open the file myJournal.md for editing. Study the code example inside out
 #   by selecting and executing code.
 
+# ==   2.2  What's in the box ...  =============================================
+
 # TASK:
 #   Copy and paste the directory tree into your journal. Add comments what
 #   these files are.
-
-
-# ==   2.2  What's in the box ...  =============================================
 
 # --R-EDA/
 #   |__.gitignore
 #   |__.init.R
 #   |__.Rprofile
-#   |__2018_Material/
-#      |__R-EDA-Clustering.R
-#      |__R-EDA-DimensionReduction.R
-#      |__R-EDA-HypothesisTesting.R
-#      |__R-EDA-Introduction.R
-#      |__R-EDA-Regression.R
 #   |__assets/
+#      |__EDA_Datasets.ppt
 #      |__FND-CSC-Data_models.pdf
-#      |__Jaitin_2014-SingleCellRNAseq.pdf
-#      |__Jaitin_paper.zip
+#      |__Jaitin-2014_SingleCellRNAseq.zip
+#      |__Pramila-2006_YeastCellCycle.zip
 #      |__Weissgerber_2015_BeyondBarcharts.zip
-#   |__codeSnips.R
 #   |__data/
 #      |__0TST.pdb
+#      |__CCgenes.RData
 #      |__Fig_3-CharacteristicGenes.txt
 #      |__GSE26922.RData
-#      |__GvHD.txt
 #      |__LPSdat.RData
+#      |__nlsParams.RData
 #      |__S288C_YDL056W_MBP1_coding.fsa
 #      |__table_S3.csv
 #      |__table_S3.xls
@@ -185,10 +179,11 @@ getwd()          # Confirm the correct directory
 #   |__dev/
 #      |__addTOC.R
 #      |__grepSrc.R
+#      |__insertSnip.R
 #      |__rptTwee.R
+#      |__updateTOC.R
 #   |__EDAintroduction.R
 #   |__journal.md
-#   |__myEDANotes.R
 #   |__R-EDA.R
 #   |__R-EDA.Rproj
 #   |__R/
@@ -196,11 +191,12 @@ getwd()          # Confirm the correct directory
 #      |__crabsPlot.R
 #      |__functionTemplate
 #      |__objectInfo.R
+#      |__pBar.R
 #      |__readFASTA.R
 #   |__README.md
+#   |__Regression.R
 #   |__sampleSolutions/
-#      |__sampleSolution-readSup3.R
-#      |__sampleSolution-readText.R
+#      |__[...]
 #   |__scripts/
 #      |__PlottingReference.R
 #      |__RPR-RegEx.R
@@ -208,7 +204,7 @@ getwd()          # Confirm the correct directory
 #      |__unitTesting.R
 #   |__tests/
 #      |__test_biCode.R
-#   |__tmp.R
+
 
 
 # =    3  INTRODUCTION  ========================================================
