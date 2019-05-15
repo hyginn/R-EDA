@@ -43,7 +43,7 @@ str(tmp)                         # next: fix the column types
 for (i in 2:ncol(tmp)) {         # convert character columns to numeric
   tmp[,i] <- as.numeric(tmp[ ,i])
   if (any(is.na(tmp[,i]))) {
-    message(sprintf("Caution: NA in column %d"), i)   # always validate!
+    message(sprintf("Caution: NA in column %d", i))   # always validate!
   }
 }
 
