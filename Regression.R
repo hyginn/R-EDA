@@ -1,4 +1,4 @@
-# Regression.R
+# regression.R
 # Purpose:
 #     Introduction to regression analysis in biological data with R
 #
@@ -52,22 +52,22 @@
 #TOC>   2        SYNTHETIC DATA: A LINEAR MODEL                           152
 #TOC>   3        APPLYING REGRESSION TO EDA                               300
 #TOC>   3.01       Scenario                                               318
-#TOC>   4        NON-LINEAR REGRESSION                                    406
-#TOC>   4.01       A utility function to plot expression profiles         423
-#TOC>   4.02       Apply the model to actual observations                 461
-#TOC>   4.03       Improve the fit with nls()                             485
-#TOC>   4.03.1         Function to plot observations and models           519
-#TOC>   4.04       Reviewing the sine-wave model                          628
-#TOC>   4.04.1         Function to explore profiles and parameters        641
-#TOC>   4.05       Improve our fitting strategy - I                       711
-#TOC>   4.06       Improve our fitting strategy - II                      820
-#TOC>   4.07       More robust fitting strategy                           903
-#TOC>   4.08       Model data for data mining                             982
-#TOC>   4.09       Exploring peak-expression timing                      1051
-#TOC>   4.10       Parameter Distributions                               1122
-#TOC>   4.11       Ordering by expression peak                           1196
-#TOC>   4.12       Plotting cell-cycle progression                       1288
-#TOC>   5        ALTERNATIVES TO PEARSON CORRELATION - THE MIC           1375
+#TOC>   4        NON-LINEAR REGRESSION                                    418
+#TOC>   4.01       A utility function to plot expression profiles         435
+#TOC>   4.02       Apply the model to actual observations                 473
+#TOC>   4.03       Improve the fit with nls()                             497
+#TOC>   4.03.1         Function to plot observations and models           531
+#TOC>   4.04       Reviewing the sine-wave model                          640
+#TOC>   4.04.1         Function to explore profiles and parameters        653
+#TOC>   4.05       Improve our fitting strategy - I                       723
+#TOC>   4.06       Improve our fitting strategy - II                      832
+#TOC>   4.07       More robust fitting strategy                           915
+#TOC>   4.08       Model data for data mining                             994
+#TOC>   4.09       Exploring peak-expression timing                      1063
+#TOC>   4.10       Parameter Distributions                               1134
+#TOC>   4.11       Ordering by expression peak                           1208
+#TOC>   4.12       Plotting cell-cycle progression                       1300
+#TOC>   5        ALTERNATIVES TO PEARSON CORRELATION - THE MIC           1387
 #TOC> 
 #TOC> ==========================================================================
 
@@ -320,8 +320,20 @@ ygData[123, ]
 # We are interested in genes that have a certain behaviour - in this case, the
 # behaviour is: "cyclically expressed". How do we find them?
 
-# For example, we can define a model for our expression profiles, and then
-# search for genes that correlate with this model. Here is a model profile (with
+# Can we just inspect and choose?
+
+# TASK:
+#  - Write a function that will plot ten randomly chosen expression profiles
+#   from the data.
+#  - Then update your function to plot the profiles scaled in amplitude between
+#    plus and minus one.
+
+# There are too many genes to work with, to use manual selection.
+
+
+# But how can we automate finding "intersting" gene expression profiles? For
+# example, we can define a model for our expression profiles, and then search
+# for genes that correlate with this model. Here is a model profile (with
 # made-up parameters):
 
 t <- seq(0, 120, by = 5)            # our timepoints
