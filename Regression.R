@@ -4,10 +4,11 @@
 #
 # Author:  Boris Steipe (boris.steipe@utoronto.ca)
 #
-# Version: 3.0
-# Date:    2019 05 14
+# Version: 3.1
+# Date:    2019 05 15
 #
 # Version history:
+#        V 3.1  In-workshop updates and fixes
 #        V 3.0  Reconceived for 2019 workshop
 #        V 2.0  Restructuring 2018, changed nls() from logistic to
 #                 cyclic data
@@ -45,21 +46,28 @@
 
 #TOC> ==========================================================================
 #TOC> 
-#TOC>   Section  Title                                                  Line
-#TOC> ----------------------------------------------------------------------
-#TOC>   1        CORRELATION                                              70
-#TOC>   2        Synthetic data: a linear model                          144
-#TOC>   3        Applying regression to EDA                              261
-#TOC>   3.1        Scenario                                              279
-#TOC>   4        NON-LINEAR REGRESSION                                   367
-#TOC>   4.1        Reviewing the sine-wave model                         565
-#TOC>   4.2        Improve our fitting strategy - I                      644
-#TOC>   4.3        Improve outr fitting strategy - II                    753
-#TOC>   4.4        Model data for data mining                            916
-#TOC>   4.5        Parameter Distributions                              1049
-#TOC>   4.6        Ordering by expression peak                          1120
-#TOC>   4.7        Plotting cell-cycle progression                      1212
-#TOC>   5        Alternatives to Pearson correlation - the MIC          1299
+#TOC>   Section  Title                                                   Line
+#TOC> -----------------------------------------------------------------------
+#TOC>   1        CORRELATION                                               78
+#TOC>   2        SYNTHETIC DATA: A LINEAR MODEL                           152
+#TOC>   3        APPLYING REGRESSION TO EDA                               300
+#TOC>   3.01       Scenario                                               318
+#TOC>   4        NON-LINEAR REGRESSION                                    406
+#TOC>   4.01       A utility function to plot expression profiles         423
+#TOC>   4.02       Apply the model to actual observations                 461
+#TOC>   4.03       Improve the fit with nls()                             485
+#TOC>   4.03.1         Function to plot observations and models           519
+#TOC>   4.04       Reviewing the sine-wave model                          628
+#TOC>   4.04.1         Function to explore profiles and parameters        641
+#TOC>   4.05       Improve our fitting strategy - I                       711
+#TOC>   4.06       Improve our fitting strategy - II                      820
+#TOC>   4.07       More robust fitting strategy                           903
+#TOC>   4.08       Model data for data mining                             982
+#TOC>   4.09       Exploring peak-expression timing                      1051
+#TOC>   4.10       Parameter Distributions                               1122
+#TOC>   4.11       Ordering by expression peak                           1196
+#TOC>   4.12       Plotting cell-cycle progression                       1288
+#TOC>   5        ALTERNATIVES TO PEARSON CORRELATION - THE MIC           1375
 #TOC> 
 #TOC> ==========================================================================
 
@@ -85,7 +93,7 @@ source("./sampleSolutions/regressionSampleSolutions-ShowPlot.R")
 # coeffecient of correlation values range from -1 to 1, with 0 indicating no
 # correlation.
 
-# Lets train our intuition about what correlation values mean for data:
+# Lets develop our intuition about what correlation values mean:
 
 set.seed(12357)
 x <- rnorm(50) # 50 random deviates from a N(0,1)
@@ -103,8 +111,8 @@ cor(x, y)
 
 # Let's explore this with a bit more variety: here is a function that has a
 # value r as an argument, and a function. We compute y as values that are to
-# r-parts a function of x, and to (1-r) parts random noise. Then we plot x and
-# y, and compute cor(x,y)
+# "r"-parts a function of x, and to (1-"r") parts random noise. Then we plot
+# x vs. y, and compute cor(x,y)
 
 plotCor <- function(x, r, f) {
   noise <- (1-r) * rnorm(length(x))
@@ -141,7 +149,7 @@ plotCor(cos(x*pi), 0.9, function(x) { sin(acos(x)) })
 # much lower.
 
 
-# =    2  Synthetic data: a linear model  ======================================
+# =    2  SYNTHETIC DATA: A LINEAR MODEL  ======================================
 
 # But let's stay with linear modelling for the moment, i.e. analyzing variation
 # under the assumption of a linear model. Then our task is, for a given data
@@ -181,11 +189,12 @@ cor(HW$heights, HW$weights) # calculate correlation
 ?lm
 lm(HW$weights ~ HW$heights)
 
+# TASK:
 # What are these numbers?
 # How do they relate to our question?
 # Is the estimate any good?
 
-# plot a regression line - abline() can take its coefficients directly from the
+# plot a regression line: abline() can take its coefficients directly from the
 # output of lm()
 abline(lm(HW$weights ~ HW$heights), col="firebrick", lwd=2)
 
@@ -204,61 +213,91 @@ plot(fit, res)
 cor(fit, res)
 
 # Calculate and plot prediction and confidence limits.
-# PREDICTION limits give boundaries on future observations,
-# they characterize how well the model is expected to
-# accommodate new data.
-#
-# CONFIDENCE limits give boundaries on adequate models.
-# They characterize how well we can trust our model
-# parameters.
+
+# PREDICTION limits give boundaries on future observations, they characterize
+# how well the model is expected to accommodate new data, i.e. the boundaries in
+# which we would expect new observations to fall.
+
+# CONFIDENCE limits give boundaries on models. They characterize how much we can
+# trust our model parameters, in our case, they describe the limits to where a
+# line thorugh the data could be drawn and still describe it "well enough".
 
 pc <- predict(lm(HW$weights ~ HW$heights), interval = "confidence")
 pp <- predict(lm(HW$weights ~ HW$heights), interval = "prediction")
 head(pc)
 
-# Now plot pp and pc limits
-# first sort on x
-o <- order(HW$heights) # o is an index vector, sorted on x-values
-HW2 <- HW[o, ]
+# Now plot pp and pc limits ...
 
-# second, recompute pp, pc in sorted order
-pc <- predict(lm(HW2$weights ~ HW2$heights), interval = "confidence")
-pp <- predict(lm(HW2$weights ~ HW2$heights), interval = "prediction")
+# First order the data points into a monotonously increasing sequence. Why?
+# Here is a simple example: Consider some points on the x-axis, with
+# corresponding y-values ...
+x <- c(0.42, 1.5, 1.71, 3, 2.78, 0.21, 2.57, 2.14, 0.85,
+       1.07, 0.64, 0, 1.28, 1.92, 2.35)
+y <- x^2  # <<<- y = x^2  ... clear and simple
+
+# What do we get when we plot a line along the points?
+# Did you think: "a parabola"?
+plot(x, y, type = "l", col = "#A0BABD")
+# ... no, because the points are not ordered. To get a line that represents
+# their functional relationship (like pc and pp limits) we need to order the
+# points, e.g. along the x-axis:
+(o <- order(x))  # remember: indices of the values from smallest to largest
+# plot the points in ordered sequence:
+lines( x[o], y[o], type = "l", col = "#F8007D55", lwd = 3)   # lines
+points(x[o], y[o], pch=21, col = "#F87D00", bg = "#FFFFFF")  # the actual points
+
+# We do the same thing to plot boundaries for confidence and prediction of
+# our linear model: order along the x-axis
+o <- order(HW$heights) # o is an index vector
+
+
+myLM <- lm(HW$weights ~ HW$heights)
+
+# compute pp, pc in sorted order
+pc <- predict(lm(HW$weights[o] ~ HW$heights[o]), interval = "confidence")
+pp <- predict(lm(HW$weights[o] ~ HW$heights[o]), interval = "prediction")
 
 # Then plot
-plot(HW2$heights, HW2$weights, xlab="Height (m)", ylab="Weight (kg)",
-     ylim = range(HW2$weights, pp))
-matlines(HW2$heights, pc, lty=c(1,2,2), col="slategrey")
-matlines(HW2$heights, pp, lty=c(1,3,3), col="firebrick")
+plot(HW$heights, HW$weights,
+     main = "Synthetic data: human heights and weights",
+     xlab = "Height (m)", ylab = "Weight (kg)",
+     sub = sprintf("Linear model with intercept %3.1f and slope %3.1f",
+                   myLM$coefficients[1], myLM$coefficients[2]),
+     ylim = range(HW$weights, pp))
+matlines(HW$heights[o], pc, lty=c(1,2,2), col="slategrey")
+matlines(HW$heights[o], pp, lty=c(1,3,3), col="firebrick")
 
 # This is the proper way to plot a linear regression: the inner boundaries (pc)
-# show the possible range of our models. This is the 95% "confidence" interval,
-# ie. the range in which 95% of average values should lie, or, the range in
-# which 95% of regression lines for different samples from the same population
-# should fall. The outer boundaries (pp) show the possible range of individual
-# predicted values, i.e. individual samples from the same distribution are
-# expected to fall within these boundaries with a probability of 95%.
-# Incidentally, the value of 95% (or p == 0.95) - which is commonly used as the
-# minimal criterion for "significance" in biomedical research - is a parameter
-# of predict(), you could set it e.g. to 0.99 by specifying "level = 0.99".
+# show the possible range of reasonable models. This is the 95% "confidence"
+# interval, the range in which 95% of regression lines for different samples
+# from the same population should fall. The outer boundaries (pp) show the
+# possible range of individual predicted values, i.e. individual samples from
+# the same distribution are expected to fall within these boundaries with a
+# probability of 95%. Incidentally, the value of 95% (or p == 0.95) - which is
+# commonly used as the minimal criterion for "significance" in biomedical
+# research - is a parameter of predict(), you could set it e.g. to 0.99 by
+# specifying "level = 0.99".
 
-# Practice
+# Practice !
 
 # In our LPS data, MF and Mo aught to respond similarly to LPS challenge.
 # If so, the LPS - ctrl data should be highly correlated.
-#
+
 # TASK:
-#  -  is that the case?
+#  -  is that the case? Calculate th correlation.
 #  -  plot the scatterplot for this hypothesis,
-#  -  calculate a linear fit
-#  -  assess whether there is a linear correlation.
+#  -  calculate a linear fit and plot a regression line
+
+insertSnip("tank.newt") # <<< Execute (if needed) to insert sample solution code
+
+
 
 # TODO
 # A glimpse at glm - linearizing data
 
 
 
-# =    3  Applying regression to EDA  ==========================================
+# =    3  APPLYING REGRESSION TO EDA  ==========================================
 
 # Let's load a real-world data set - yeast gene expression data. This data is
 # derived from the GSE3635 expression set on GEO. Check it out:
@@ -276,7 +315,7 @@ ygProfiles[123, ]
 rownames(ygProfiles)[123]
 ygData[123, ]
 
-# ==   3.1  Scenario  ==========================================================
+# ==   3.01  Scenario  =========================================================
 
 # We are interested in genes that have a certain behaviour - in this case, the
 # behaviour is: "cyclically expressed". How do we find them?
@@ -308,12 +347,12 @@ cor(ygProfiles[iRow, ], myModel)
 
 # Let's calculate correlations for all profiles ...
 
-myCor <- numeric(nrow(ygProfiles))
-for (iRow in 1:nrow(ygProfiles)) {
-  myCor[iRow] <- cor(ygProfiles[iRow, ], myModel)
+myCor <- numeric(nrow(ygProfiles))                 # an empty vector for results
+for (iRow in 1:nrow(ygProfiles)) {                 # for each gene ...
+  myCor[iRow] <- cor(ygProfiles[iRow, ], myModel)  # store correlation
 }
 # That's quite fast. What do we get?
-hist(myCor)
+hist(myCor, col = "#FFF3DE")
 
 # Some correlations are very high. Let's plot the 10 highest correlations, and
 # the 10 highest anticorrelations.
@@ -352,8 +391,8 @@ iRow <- 748
 points(t, 5 * ygProfiles[iRow, ], type = "b", col = "black")
 
 # calculate correlations:
-cor(ygProfiles[iRow, ], myModel)           # Excellent correlation
-cor(ygProfiles[iRow, ], myShiftedModel)    # No significant correlation
+cor(ygProfiles[iRow, ], myModel)           # No significant correlation
+cor(ygProfiles[iRow, ], myShiftedModel)    # Excellent correlation
 
 # Even though gene 748 (YDL030W, PRP9) is cyclically expressed, it only has a
 # measly -0.03 coefficient of correlation with the our original model, whereas
@@ -379,11 +418,13 @@ cycEx <- function(t, A, phi, f) {
 t <- seq(0, 120, by = 5)
 
 # What does this function look like? Let's write a small function to
-# conveniently explore parameters:
-plotModel <- function(t, A, phi, f, thisCol = "#CC0000", plt = TRUE) {
+# conveniently explore the effect of parameters on the function:
+
+# ==   4.01  A utility function to plot expression profiles  ===================
+plotModel <- function(t, A, phi, f, thisCol = "#CC0000", add = FALSE) {
 
   ex <- cycEx(t, A, phi, f)
-  if (plt) {
+  if (! add) {
     plot(t, ex, col = thisCol, type = "l",
          xlab = "t (min.)", ylab = "expression log-ratio",
          main = "Model",
@@ -396,26 +437,28 @@ plotModel <- function(t, A, phi, f, thisCol = "#CC0000", plt = TRUE) {
   }
 }
 
-# Let's explore a few parameters for cycEx():
+# Let's explore a few parameters of our conceptual expression model cycEx():
 
 # Varying A
 plotModel(t, A =  1.0, phi = 0, f = 1.0)
-plotModel(t, A =  0.5, phi = 0, f = 1.0, thisCol = "#DD99CC", plt = FALSE)
-plotModel(t, A = -1.0, phi = 0, f = 1.0, thisCol = "#FFDDEE", plt = FALSE)
+plotModel(t, A =  0.5, phi = 0, f = 1.0, thisCol = "#DD99CC", add = TRUE)
+plotModel(t, A = -1.0, phi = 0, f = 1.0, thisCol = "#FFDDEE", add = TRUE)
 
 # Varying 1/f
 plotModel(t, A = 1.0, phi = 0, f = 1.0)
-plotModel(t, A = 1.0, phi = 0, f = 2.0, thisCol = "#DD99CC", plt = FALSE)
-plotModel(t, A = 1.0, phi = 0, f = 4.0, thisCol = "#FFDDEE", plt = FALSE)
-plotModel(t, A = 1.0, phi = 0, f = 0.5, thisCol = "#990000", plt = FALSE)
+plotModel(t, A = 1.0, phi = 0, f = 2.0, thisCol = "#DD99CC", add = TRUE)
+plotModel(t, A = 1.0, phi = 0, f = 4.0, thisCol = "#FFDDEE", add = TRUE)
+plotModel(t, A = 1.0, phi = 0, f = 0.5, thisCol = "#990000", add = TRUE)
 
 # Varying phi
 plotModel(t, A = 1.0, phi =  0, f = 1.0)
-plotModel(t, A = 1.0, phi =  5, f = 1.0, thisCol = "#DD99CC", plt = FALSE)
-plotModel(t, A = 1.0, phi = 15, f = 1.0, thisCol = "#EEBBDD", plt = FALSE)
-plotModel(t, A = 1.0, phi = 30, f = 1.0, thisCol = "#FFDDEE", plt = FALSE)
-plotModel(t, A = 1.0, phi = 60, f = 1.0, thisCol = "#EEBBDD", plt = FALSE)
+plotModel(t, A = 1.0, phi =  5, f = 1.0, thisCol = "#DD99CC", add = TRUE)
+plotModel(t, A = 1.0, phi = 15, f = 1.0, thisCol = "#EEBBDD", add = TRUE)
+plotModel(t, A = 1.0, phi = 30, f = 1.0, thisCol = "#FFDDEE", add = TRUE)
+plotModel(t, A = 1.0, phi = 60, f = 1.0, thisCol = "#EEBBDD", add = TRUE)
 
+
+# ==   4.02  Apply the model to actual observations  ===========================
 
 # Let's consider a profile we found in our linear regression analysis: gene 5571
 # (YOR229W, WTM2), a replication stress response gene.
@@ -426,18 +469,25 @@ plot(t, ygProfiles[iRow, ], col = "black", type = "b",
      main = sprintf("%s (%s)", ygData$sysName[iRow], ygData$stdName[iRow]))
 abline(h =  0, col = "#DDEEFF")
 abline(v = 60, col = "#DDEEFF")
+text(0, 0.35, label = "Observed", pos = 4, cex = 0.8)
 
 
 # Our default parameters are not bad - after all, we discovered the gene using
 # this model (with fixed parameters). (I'm arbitrarily using A = 0.2 here, for
 # the optics):
-plotModel(t, A =  0.2, phi = 0, f = 1.0, thisCol = "#DD99CC", plt = FALSE)
+plotModel(t, A =  0.2, phi = 0, f = 1.0, thisCol = "#DD99CC", add = TRUE)
+text(0, 0.30, label = "Conceptual model", pos = 4, cex = 0.8, col = "#DD99CC")
+
+# calculate correlation:
 cor(ygProfiles[iRow, ], cycEx(t, A =  0.2, phi = 0, f = 1.0)) # 0.865
 
-# But let's see if we can improve the fit:
+
+# ==   4.03  Improve the fit with nls()  =======================================
+
+# Let's see if we can improve the fit:
 
 #  1: assign the data to a variable
-y <- ygProfiles[iRow,]
+(y <- ygProfiles[iRow,])
 
 #  2: Use nls() to calculate a non-linear least squares fit. While linear
 #  least-squares fits have an analytical solution, non-linear fits need to be
@@ -457,12 +507,16 @@ myFit
 plotModel(t, A = coef(myFit)["A"],
           phi = coef(myFit)["phi"],
           f = coef(myFit)["f"],
-          thisCol = "#CC0000", plt = FALSE)
+          thisCol = "#00CC77", add = TRUE)
+text(0, 0.25, label = "Fitted model", pos = 4, cex = 0.8, col = "#00CC77")
 
 cor(ygProfiles[iRow, ], predict(myFit)) # 0.901
 
 # You can see that the curve is closer to the data points, and that the already
 # good correlation has improved a bit more.
+
+
+# ===   4.03.1  Function to plot observations and models      
 
 # Here is a function to plot a profile, and its fitted curve
 
@@ -495,21 +549,21 @@ checkFit(iRow, myFit)
 # Using nls(), we can calculate curve-fits of our model for all expression
 # profiles, then select those that best match "interesting" parameters.
 
-N <- nrow(ygProfiles)
-nlsResults <- data.frame(A = numeric(N),
+N <- nrow(ygProfiles)                          # number of rows in our data
+nlsResults <- data.frame(A = numeric(N),       # a data frame to collect results
                          phi = numeric(N),
                          f = numeric(N),
                          cor = numeric(N))
-for (i in 1:N) {
-  pBar(i, N)  # print a progress bar (function in .utilities.R)
-  y <- ygProfiles[i,]
+for (i in 1:N) {                               # for each gene ...
+  pBar(i, N)                                   #   print a progress bar
+  y <- ygProfiles[i,]                          #   get the observations ...
 
-  try(myFit <- nls(y ~ cycEx(t, A, phi, f),
-                   start = list(A = 0.15,
-                                phi = 0.1,
+  try(myFit <- nls(y ~ cycEx(t, A, phi, f),    #   try fitting, but don't
+                   start = list(A = 0.15,      #   crash if the fit doesn't
+                                phi = 0.1,     #   converge ...
                                 f = 1.0) ), silent = TRUE)
-  if (length(myFit) > 0) {
-    nlsResults$A[i] <- coef(myFit)["A"]
+  if (length(myFit) > 0) {                     #   if the fit converged ...
+    nlsResults$A[i] <- coef(myFit)["A"]        #     save the parameters
     nlsResults$phi[i] <- coef(myFit)["phi"]
     nlsResults$f[i] <- coef(myFit)["f"]
     nlsResults$cor[i] <- cor(y, predict(myFit))
@@ -518,19 +572,28 @@ for (i in 1:N) {
 
 # What are some good fits? For example, we could look for high amplitudes, and
 # good correlations:
-plot(nlsResults$A, nlsResults$cor)
-( sel <- which(nlsResults$A > 0.3 & nlsResults$cor > 0.85) )
+plot(nlsResults$A,nlsResults$cor,
+     col = densCols(nlsResults$A,nlsResults$cor),
+     pch = 16,
+     cex = 0.8)
+abline(h = 0, col = "#00EEEE44")
+abline(v = 0, col = "#00EEEE44")
 
+# select some interesting genes and check what they are ...
+( sel <- which(nlsResults$A > 0.3 & nlsResults$cor > 0.85) )
 ygData[sel, c("stdName", "alias")]
 # Interesting ... mostly genes involved in DNA replication
 
+# Plot these profiles in a window that highlights the cycle phases
 plot(seq(0, 120, by = 5), rep(0, 25), type = "n",
      ylim = c(-1.5, 1.5),
      xlab = "time", ylab = "log-ratio expression")
+rect( -2.5, -2,   7.5, 2, col = "#f4dfdf", border = NA)   # G1
 rect( 22.5, -2,  37.5, 2, col = "#dfeaf4", border = NA)   # G0
-rect( 82.5, -2,  97.5, 2, col = "#dfeaf4", border = NA)   # G0
 rect( 52.5, -2,  67.5, 2, col = "#f4dfdf", border = NA)   # G1
+rect( 82.5, -2,  97.5, 2, col = "#dfeaf4", border = NA)   # G0
 rect(112.5, -2, 122.5, 2, col = "#f4dfdf", border = NA)   # G1
+text(c(2, 30, 60, 90, 118), rep(1.25, 5), c("G1", "G0", "G1", "G0", "G1"))
 
 for (i in 1:length(sel)) {
   points(seq(0, 120, by = 5), ygProfiles[sel[i], ], type = "b", col = "black")
@@ -559,10 +622,10 @@ cor(ygProfiles[iRow, ], myModel)
 
 # TASK:
 # How would you use this data to define genes that are, and genes that are not
-# cyclically expressed? How would you draw the line?
+# cyclically expressed? Where would you draw the line?
 #
 
-# ==   4.1  Reviewing the sine-wave model  =====================================
+# ==   4.04  Reviewing the sine-wave model  ====================================
 #
 
 # Quite a few of our profiles have rather poor correlations. We could just
@@ -572,6 +635,10 @@ cor(ygProfiles[iRow, ], myModel)
 
 sel <- which(nlsResults$A > 0.3 & nlsResults$cor < 0.4)
 nlsResults[sel,]
+
+
+
+# ===   4.04.1  Function to explore profiles and parameters   
 
 # Let's write a nice function to plot the profiles and the fitted parameters so
 # we can explore them more easily:
@@ -641,7 +708,7 @@ plotFit(iRow, 0.02, 30, 0.5)
 
 
 
-# ==   4.2  Improve our fitting strategy - I  ==================================
+# ==   4.05  Improve our fitting strategy - I  =================================
 #    Try different parameters and select the best result
 
 # This is pretty trivial - we'll just write a function that tries starting our
@@ -750,7 +817,7 @@ checkFit(iRow, bestFitSimple(ygProfiles[iRow, ]))
 # constrained to be symmetric about 0, and if the data is not symmetric but
 # shifted, we can't get a good fit. Which leads us directly to:
 
-# ==   4.3  Improve outr fitting strategy - II  ================================
+# ==   4.06  Improve our fitting strategy - II  ================================
 #    (II) Add parameters to our model, for flexibility
 
 # A model can have too many parameters, and that will give rise to "overfitting"
@@ -759,8 +826,7 @@ checkFit(iRow, bestFitSimple(ygProfiles[iRow, ]))
 # fit, adding one or two parameters to the model should be fine. I would like to
 # add two parameters: (I) a vertical offset, to release the constraint of our
 # fitted model to be symmetric around 0, and (II) a damping function, to handle
-# attenuation of expression - after all we saw a large component of global
-# change in our first Principal Component.
+# attenuation of expression.
 
 # Let's see what mathematical form such parameters can take.
 # We were considering points along a time axis of two hours in 5 min. intervals:
@@ -790,10 +856,10 @@ cycEx2 <- function(t, A, phi, f, k, B) {
 # Let's overwrite plotModel()  to
 # conveniently explore parameters:
 plotModel <- function(t, A = 1.0, phi = 0, f = 1.0, k = 0, B = 0,
-                      thisCol = "#CC0000", plt = TRUE) {
+                      thisCol = "#CC0000", add = FALSE) {
 
   ex <- cycEx2(t, A, phi, f, k, B)
-  if (plt) {
+  if (! add) {
     plot(t, ex, col = thisCol, type = "l",
          ylim = c(min(ex) * 1.2, max(ex) * 1.2),
          xlab = "t (min.)", ylab = "expression log-ratio",
@@ -810,15 +876,15 @@ plotModel <- function(t, A = 1.0, phi = 0, f = 1.0, k = 0, B = 0,
 
 # Varying B .. trivial
 plotModel(t, B = 0)
-plotModel(t, B = 0.2,  thisCol = "#DD99CC", plt = FALSE)
-plotModel(t, B = -0.2, thisCol = "#FFDDEE", plt = FALSE)
-plotModel(t, A = 0.5, B = -0.5, thisCol = "#CC99DD", plt = FALSE)
+plotModel(t, B = 0.2,  thisCol = "#DD99CC", add = TRUE)
+plotModel(t, B = -0.2, thisCol = "#FFDDEE", add = TRUE)
+plotModel(t, A = 0.5, B = -0.5, thisCol = "#CC99DD", add = TRUE)
 
 # Varying k
 plotModel(t, k = 0)
-plotModel(t, k = 0.01, thisCol = "#DD99CC", plt = FALSE)
-plotModel(t, k = 0.02, thisCol = "#FFDDEE", plt = FALSE)
-plotModel(t, A = 0.5, k = -0.008, thisCol = "#22EE66", plt = FALSE)
+plotModel(t, k = 0.01, thisCol = "#DD99CC", add = TRUE)
+plotModel(t, k = 0.02, thisCol = "#FFDDEE", add = TRUE)
+plotModel(t, A = 0.5, k = -0.008, thisCol = "#22EE66", add = TRUE)
 
 
 # Ok ... but does it fit? Let's update our bestFit function - and let's see if
@@ -833,6 +899,8 @@ if (!requireNamespace("robustbase")) {
   install.packages("robustbase")
 }
 
+
+# ==   4.07  More robust fitting strategy  =====================================
 
 bestFit <- function(y) {
   # Tries different parameter settings for nls() and returns the best
@@ -899,10 +967,8 @@ iRow <- 2501
 checkFit(iRow, bestFit(ygProfiles[iRow, ]))
 # This was a problem fit, quite good now ... Compare to the old fit
 checkFit(iRow, bestFitSimple(ygProfiles[iRow, ]))
-# Once again ...
-checkFit(iRow, bestFit(ygProfiles[iRow, ]))
 
-# Some of our standards: Mbp1, Swi4, Swi6 ...
+# Some of our standards: "known" cell cycle regulators - Mbp1, Swi4, Swi6 ...
 
 iRow <- which(ygData$stdName == "MBP1")
 checkFit(iRow, bestFit(ygProfiles[iRow, ]))
@@ -913,11 +979,16 @@ checkFit(iRow, bestFit(ygProfiles[iRow, ]))
 iRow <- which(ygData$stdName == "SWI6")
 checkFit(iRow, bestFit(ygProfiles[iRow, ]))
 
-# ==   4.4  Model data for data mining  ========================================
+# ==   4.08  Model data for data mining  =======================================
 
 # We can now recalculate all the fits, and mine the results for genes with
 # similar parameters (coexpressed?), phase shifted (causally related), or other
 # interesting parameter combinations.
+
+
+# This takes about 30 minutes, since there are more than 100 nlrob() fits
+# required ... but instead of running the next block, we can just load
+# the results ...
 
 N <- nrow(ygProfiles)
 nlsParams <- data.frame(A = numeric(N),
@@ -976,6 +1047,8 @@ sum(nlsParams$cor > 0.8)
 # for genes that do _not_ follow the model of a cyclical varying function well.
 # It becomes our task now to consider which parameters actually _do_ support
 # annotating a gene as a cell-cycle gene.
+
+# ==   4.09  Exploring peak-expression timing  =================================
 
 # For further plotting, we construct two helper functions: a function that
 # returns the first positive peak, and a function that marks its position on a
@@ -1046,7 +1119,7 @@ exploreFits <- function(sel) {
 exploreFits(1:nrow(ygProfiles))
 
 
-# ==   4.5  Parameter Distributions  ===========================================
+# ==   4.10  Parameter Distributions  ==========================================
 
 # Since we now have reasonable fits for most expression profiles, we can explore
 # and evaluate the parameter distributions.
@@ -1089,14 +1162,17 @@ plot(60/nlsParams$f, nlsParams$A, xlim=c(0, 120), cex = 0.7,
 abline(v = 60, col = "#0099CC", lwd = 0.5)
 abline(v = c(50, 70), col = "#88CCFF", lwd = 0.5, lty = 2)
 
+
+
 # That definitely seems to be the case. Let's get better resolution of the
 # low amplitudes by plotting log-values:
 #
 
 plot(60/nlsParams$f, log10(nlsParams$A), xlim=c(0, 120), cex = 0.7,
-     pch = 19, col = "#00CC9912")
-abline(v = 60, col = "#0099CC", lwd = 0.5)
-abline(v = c(50, 70), col = "#88CCFF", lwd = 0.5, lty = 2)
+     pch = 19, col = "#0099CC12")
+abline(v = 60, col = "#00FF99", lwd = 0.5)
+abline(v = c(50, 70), col = "#00FF99", lwd = 0.5, lty = 2)
+
 
 # This is very informative: amplitudes around 0.01 correspond to our parameter
 # bounds - and more or less correspond to non-cyclically expressed genes ...
@@ -1117,7 +1193,7 @@ exploreFits(sel)
 
 
 
-# ==   4.6  Ordering by expression peak  =======================================
+# ==   4.11  Ordering by expression peak  ======================================
 
 # How do we express the timing of the first expression peak? Our parameter phi
 # was constrained to lie between -240 and 240 minutes ...
@@ -1209,7 +1285,7 @@ CCgenes <- data.frame(i = selCC,
 # load("CCgenes.RData")
 
 
-# ==   4.7  Plotting cell-cycle progression  ===================================
+# ==   4.12  Plotting cell-cycle progression  ==================================
 
 # A rather informative view of profiles through cell-cycle progression is shown
 # in Figure 1 of Pramila (2006). To reproduce a similar plot, we use the image()
@@ -1296,7 +1372,7 @@ axis(2, at = yTicks, labels = ygData$stdName[CCgenes$i[idx]],
 
 
 
-# =    5  Alternatives to Pearson correlation - the MIC  =======================
+# =    5  ALTERNATIVES TO PEARSON CORRELATION - THE MIC  =======================
 
 # The Maximal Information Coefficient is implemented
 # in the R package Minerva. Let's try it out with
