@@ -1,4 +1,4 @@
-## Sample solution >>>
+## Sample solution >>>                                               (blot.pipe)
 
 ##      - rows 1:10 of the first two columns in reverse order
 

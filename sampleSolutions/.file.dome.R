@@ -1,4 +1,4 @@
-## Sample solution >>>
+## Sample solution >>>                                               (file.dome)
 
 ## Read the csv file
 tmp <- read.csv("./data/table_S3.csv",
@@ -6,8 +6,8 @@ tmp <- read.csv("./data/table_S3.csv",
                 as.is = TRUE)
 
 ## The object "tmp" should appear in the Data section of the Environment tab
-## in the top-right pane. It has a spreadsheet symbol next to it. Click that - or
-## type View(rawDat), and study the object. You should find:
+## in the top-right pane. It has a spreadsheet symbol next to it. Click that -
+## or type View(rawDat), and study the object. You should find:
 ## - all columns are named V<something>
 ## - rows 1 to 6 do not contain data
 ## - there is not a single row that could be used for column names

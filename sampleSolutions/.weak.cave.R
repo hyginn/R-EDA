@@ -1,6 +1,6 @@
-## Sample solution >>>
+## Sample solution >>>                                               (weak.cave)
 
-## Solution 1: Enter data into code, element by element  ================
+## Solution 1: Enter data into R-script, element by element
 ##
 ## 1. use a text-processor to replace each occurrence of a
 ##    paragraph-break with the string ", ".

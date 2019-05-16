@@ -1,16 +1,12 @@
-## Sample solution >>>
+## Sample solution >>>                                               (tank.newt)
 
-## In our LPS data, MF and Mo aught to respond similarly to LPS challenge.
-## If so, the LPS - ctrl data should be highly correlated.
-##
-## TASK:
 ##  -  is that the case?
-dMF <- LPSdat$MF.LPS  - LPSdat$MF.ctrl
+dMF <- LPSdat$MF.LPS  - LPSdat$MF.ctrl       # compute the response to LPS
 dMo <- LPSdat$Mo.LPS  - LPSdat$Mo.ctrl
 
-cor(dMF, dMo)
+cor(dMF, dMo)                                # calculate correlation
 
-##  -  plot the scatterplot for this hypothesis,
+##  -  plot a scatterplot
 plot(dMF, dMo,
      pch=21,
      col="#00228855",
@@ -18,37 +14,31 @@ plot(dMF, dMo,
      cex = 1.4)
 
 ##  -  calculate a linear fit
-lFit <- lm(dMo ~ dMF)
+(lFit <- lm(dMo ~ dMF))
 
-abline(lFit, col="firebrick")
+abline(lFit, col="firebrick")                # add a regresion line to the plot
 
-pc <- predict(lm(dMo ~ dMF), interval = "confidence")
-pp <- predict(lm(dMo ~ dMF), interval = "prediction")
-head(pc)
+                                             # plot pp and pc limits ...
+o <- order(dMF)                              # o is an index vector that sorts
+                                             # the dMF values into increasing
+                                             # order
 
-# Now plot pp and pc limits
-# first sort on x
-o <- order(dMF) # o is an index vector, sorted on x-values
-
-# second, recompute pp, pc in sorted order
 pc <- predict(lm(dMo[o] ~ dMF[o]), interval = "confidence")
 pp <- predict(lm(dMo[o] ~ dMF[o]), interval = "prediction")
+## Note that we are re-ordering the genes with "o"
 
-# Then plot
-plot(dMF, dMo,
-     xlab = "Macrophage stimulation",
-     ylab = "Monocyte stimulation",
-     xlim = range(c(dMF, dMo, pp)),
-     ylim = range(c(dMF, dMo, pp)),
-     pch=21,
-     col="#00228855",
-     bg="#0077FF44",
-     cex = 1.4)
+plot(dMF, dMo,                               # LPS response values
+     xlab = "Macrophage stimulation",        # label for x-axis
+     ylab = "Monocyte stimulation",          # label for y-axis
+     xlim = range(c(dMF, dMo, pp)),          # make the limits for x- and y-
+     ylim = range(c(dMF, dMo, pp)),          #   the same, and large enough to
+     pch=21,                                 #   accommodate all points
+     col="#00228855",                        # colour for point border
+     bg="#0077FF44",                         # colour for point area
+     cex = 1.4)                              # scale of the points
 
 matlines(dMF[o], pc, lty=c(1,2,2), col="slategrey")
 matlines(dMF[o], pp, lty=c(1,3,3), col="firebrick")
-
-##  -  assess whether there is a linear correlation.
 
 ## <<< Sample solution
 # [END]
