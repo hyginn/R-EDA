@@ -56,6 +56,8 @@ writeMyCopy <- function(FN, prefix = "my", outFile) {
 writeMyCopy("journal.md", outFile = "myJournal.md")
 writeMyCopy("EDAintroduction.R")
 writeMyCopy("regression.R")
+writeMyCopy("clustering.R")
+writeMyCopy("dimensionReduction.R")
 
 
 # Clean up
