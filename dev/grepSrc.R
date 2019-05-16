@@ -56,6 +56,7 @@ grepSrc <- function(patt,
   for (myPath in paths) {
     for (myExt in ext) {
       myFiles <- c(myFiles, list.files(path = gsub("/$", "", myPath),
+                                       all.files = TRUE,
                                        pattern = myExt,
                                        full.names = TRUE))
     }
