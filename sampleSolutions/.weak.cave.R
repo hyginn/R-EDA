@@ -1,50 +1,57 @@
 ## Sample solution >>>                                               (weak.cave)
 
-## Solution 1: Enter data into R-script, element by element
-##
-## 1. use a text-processor to replace each occurrence of a
-##    paragraph-break with the string ", ".
-## 2. wrap the string with c() and assign it.
+# TASK: Apply PCA to the crabs dataset to distinguish species and sex
+#       from morphometric measurements.
+head(crabs)
+pcaCrabs <- prcomp(crabs[, 4:8])
 
-charGenes <- c("Cd19", "Cd79b", "Cd22", "Cd37", "Ctsd",
-               "Apoe", "C1qa", "C1qb", "C1qc", "Csf1r",
-               "Slpi", "Tlr2", "Mmp13", "Marco", "Ifng",
-               "Gzmb", "Myc", "Xcl1", "Ccl5", "Gzma",
-               "Nkg7", "Spic", "Cebpb", "Lyz2", "Sfpi1",
-               "Nfkbiz", "Bst2", "Siglech", "Ly6d", "Irf8",
-               "Cst3", "Naaa", "Ccr7", "Cxcl9", "Traf1",
-               "Relb", "Itgax", "Tmem176b", "Tnf", "Tnfaip3",
-               "Nfkbia", "Il15", "Cxcl10", "Ifit1", "Isg15",
-               "Irf7")
+plot(pcaCrabs)
+summary(pcaCrabs)
+str(pcaCrabs)
 
-## Note: you need a text processor that does _not_ change quotationmarks, does
-## _not_ add formatting, does _not_ play any of the evil tricks that are
-## designed to support secretarial tasks, and does _not_ hide the essential
-## details of your file from you (like the file extension). Fortunately, you
-## already have one: you can use RStudio as a code editor, but also as a
-## plain-text editor! It's actually a really good text editor, since it
-## supports multi-line coliumn selections.
+# Plot projections along the components into a scatterplot.
+# Axes for points are scaled as values, for vectors as variance
+# Default for biplot() is the first and second component.
 
+biplot(pcaCrabs, xlabs=as.numeric(fac))
+legend(-120, -63,
+       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
+       box.col=1, bg="lightgrey")
 
-## Solution 2: Use the read.csv() function  =============================
-charGenes <- read.csv("./data/Fig_3-CharacteristicGenes.txt",
-                      header = FALSE,
-                      stringsAsFactors = FALSE)
+# Plot the first against the third principal component
+biplot(pcaCrabs, xlabs=as.numeric(fac), choices = c(1, 3))
+legend(-120, -63,
+       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
+       box.col=1,
+       bg="lightgrey")
 
-## Note: this produces a dataframe. This is super useful if we need to work
-## with data from an Excel spreadsheet! Simply save the data as csv to then
-## import it into R.
-
-charGenes$V1
-charGenes[ , "V1"]
-unlist(charGenes)
+# Plot the second against the third principal component
+biplot(pcaCrabs, xlabs=as.numeric(fac), choices = c(2, 3))
+legend(-15, -8,
+       c("1: B.F", "2: B.M", "3: O.F", "4: O.M"),
+       box.col=1,
+       bg="lightgrey")
 
 
-##  Solution 2: Use the readLines() function
+#       Plot the results of important
+#       PCs as a scatterplot in which blue males are shown as blue
+#       triangles, orange males as orange triangles, blue females as
+#       blue circles and orange females as orange circles.
 
-charGenes <- readLines("./data/Fig_3-CharacteristicGenes.txt")
+# Somewhat pedestrian
+plot(pcaCrabs$x[,2], pcaCrabs$x[,2], type ="n")
+points(pcaCrabs$x[  1: 50, 2], pcaCrabs$x[  1: 50, 3], pch=17, col="blue")
+points(pcaCrabs$x[ 51:100, 2], pcaCrabs$x[ 51:100, 3], pch=19, col="blue")
+points(pcaCrabs$x[101:150, 2], pcaCrabs$x[101:150, 3], pch=17, col="orange")
+points(pcaCrabs$x[151:200, 2], pcaCrabs$x[151:200, 3], pch=19, col="orange")
 
-## Note: this produces a vector of strings
+# A more advaced function is in ./R/crabsPlot.R
+crabsPlot(pcaCrabs$x[,2], pcaCrabs$x[,3],
+          crabs[ ,1], crabs[ ,2], pcaCrabs$x[ ,1],
+          main = "Principal components 2 and 3 distinguish crabs",
+          xlab = "PC2",
+          ylab = "PC3")
+
 
 ## <<< Sample solution
 # [END]
